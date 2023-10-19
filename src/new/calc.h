@@ -7,9 +7,15 @@
 
 /** Datenklasse für Ergebnis der Punktberechnungs methode*/
 struct point{
+public:
     float x;
     float y;
     float abweichung;
+    point(float x, float y, float abweichung){
+        this->x=x;
+        this->y=y;
+        this->abweichung=abweichung;
+    }
 };
 
 /**Klasse für algorithmik wie winkelberechnung oder mittelwertbildung*/

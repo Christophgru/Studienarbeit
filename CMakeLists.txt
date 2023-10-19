@@ -7,4 +7,9 @@ include_directories(src/new)
 
 add_executable(Studienarbeit
         src/new/serial.cpp
-        src/new/serial.h)
+        src/new/serial.h
+        src/new/main.cpp
+        src/new/calc.cpp
+        src/new/calc.h
+        src/new/display.cpp
+        src/new/display.h)
