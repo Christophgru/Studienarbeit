@@ -1,0 +1,9 @@
+Weiterentwicklung eines Systems zur Unfallprävention zwischen LKWs und Fahrradfahrern
+
+1. Laufzeitoptimierung
+2. Ergänzug eines weiterer Empfänger
+3. Filteralgorithmen
+4. Einbindung eines existierendes UWB basiertes Schätzverfahren
+
+Opt.:
+GUI
