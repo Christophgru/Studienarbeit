@@ -4,13 +4,14 @@
 
 #ifndef STUDIENARBEIT_SERIAL_H
 #define STUDIENARBEIT_SERIAL_H
-
+#include "windows.h"
 
 class serial {
     ///Class to abstract the Serial Port access for Windows
 
 private:
         int port;
+        HANDLE hSerial;
 
 public:
     /**Constructor

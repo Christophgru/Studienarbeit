@@ -11,14 +11,15 @@ import math
 import time
 import datetime
 import numpy as np
-import matplotlib.pyplot as plt
 from queue import Queue
 from typing import Any
+from matplotlib import pyplot as plt
 from math import pi
 from math import tan
 
 #### Defines ####
 # Constants for deviation calculation
+
 DEVIATION_COEFFICIENTS = [
     2.21 * 10 ** (-10), -3.65 * 10 ** (-9), -1.73 * 10 ** (-6),
     4.51 * 10 ** (-5), 0.00343, -0.068, 3.6
@@ -252,7 +253,6 @@ def main():
         initialize_serial_ports()
 
         plotsketch(distance, theta2_offset, theta3_offset, 1, 1, 'black')
-
 
         while 1:
             # read input datastream for anchor node 1 
