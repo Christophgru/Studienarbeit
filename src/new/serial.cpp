@@ -5,6 +5,9 @@
 #include "serial.h"
 #include <windows.h>
 #include <tchar.h>
+#include <./../../boost_1_83_0/boost/asio.hpp>
+
+
 using namespace std;
 serial::serial(int port) {
     this->port=port;
@@ -25,40 +28,29 @@ int serial::initialize() {
     std::string portName = "COM"+ std::to_string(this->port); // Change this to your specific COM port
 
     // Open the COM port
-    const char* cstr;
+    const char * cstr;
     cstr=portName.c_str();
 
+    boost::asio::io_service io;
+    boost::asio::serial_port serial(io);
 
-   hSerial = CreateFile(cstr, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING,
-                          FILE_ATTRIBUTE_NORMAL, 0);
-    if (hSerial == INVALID_HANDLE_VALUE) {
-        if (GetLastError() == ERROR_FILE_NOT_FOUND) {
-            // serial port not found. Handle error here.
-            cerr<<"port not found"<<endl;
+    try {
+        serial.open(cstr);
+        serial.set_option(boost::asio::serial_port_base::baud_rate(115200));
+        serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::hardware));
+
+        // Check if the serial port is open
+        if (serial.is_open()) {
+            // Serial port is open and configured as required
+            // You can perform your serial communication here
+        } else {
+            // Serial port failed to open
+            // Handle the error as needed
         }
-        // any other error. Handle error here.
-        cerr<<"error during handle creation"<<endl;
+    } catch (const std::exception& e) {
+        // Handle exceptions (e.g., port not found, permission denied)
+        std::cerr << e.what() << std::endl;
     }
-    cout<<"Errorcode: "<<GetLastError()<<"handle: "<<hSerial<<endl;
-
-    DCB dcbSerialParam = {0};
-    dcbSerialParam.DCBlength = sizeof(dcbSerialParam);
-
-    if (!GetCommState(hSerial, &dcbSerialParam)) {
-        // handle error here
-        cerr<<"error during GetCommState"<<endl;
-    }
-
-    dcbSerialParam.BaudRate = CBR_19200;
-    dcbSerialParam.ByteSize = 8;
-    dcbSerialParam.StopBits = ONESTOPBIT;
-    dcbSerialParam.Parity = NOPARITY;
-
-    if (!SetCommState(hSerial, &dcbSerialParam)) {
-        // handle error here
-        cerr<<"error during SetCommState"<<endl;
-    }
-
 
 }
 float parseangle(DWORD bytesread){
@@ -72,7 +64,7 @@ float serial::getAngle() {
     char buffer[n + 1]={0};
     DWORD bytesRead=0;
 
-    if (ReadFile(hSerial, buffer, n, &bytesRead, NULL)) {
+    if (ReadFile(hSerial, buffer, n, &bytesRead, nullptr)) {
         std::cout << "Received " << bytesRead << " bytes: " << buffer << std::endl;
     } else {
         std::cerr << "Error reading from COM port." << std::endl;
