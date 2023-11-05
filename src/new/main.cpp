@@ -3,6 +3,7 @@
 //
 
 #include "serial.h"
+#include "iostream"
 #include "calc.h"
 #include "display.h"
 int main(int argc, char** argv){
@@ -15,6 +16,10 @@ int main(int argc, char** argv){
     //todo: serial in liste oder vektor einlesen, um anzahl dynamisch zu machen
     serial s1=serial(port1);
     serial s2=serial(port2);
-    point p=c->getPosFromAngles(s1.getAngle(),s2.getAngle(),abstand);
+    float angle1=s1.getAngle();
+    float angle2=s2.getAngle();
+    point p=c->getPosFromAngles(angle1,angle2,abstand);
     d->projectPos(p);
+    int x=0;
+    while (x<1000000000)x++;
 }
