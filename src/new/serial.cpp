@@ -5,7 +5,6 @@
 #include "serial.h"
 #include <windows.h>
 #include <tchar.h>
-#include <./../../boost_1_83_0/boost/asio.hpp>
 
 
 using namespace std;
@@ -30,28 +29,8 @@ int serial::initialize() {
     // Open the COM port
     const char * cstr;
     cstr=portName.c_str();
-
-    boost::asio::io_service io;
-    boost::asio::serial_port serial(io);
-
-    try {
-        serial.open(cstr);
-        serial.set_option(boost::asio::serial_port_base::baud_rate(115200));
-        serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::hardware));
-
-        // Check if the serial port is open
-        if (serial.is_open()) {
-            // Serial port is open and configured as required
-            // You can perform your serial communication here
-        } else {
-            // Serial port failed to open
-            // Handle the error as needed
-        }
-    } catch (const std::exception& e) {
-        // Handle exceptions (e.g., port not found, permission denied)
-        std::cerr << e.what() << std::endl;
-    }
-
+    //todo: initialize
+   
 }
 float parseangle(DWORD bytesread){
     std::cout<<bytesread<<std::endl;
