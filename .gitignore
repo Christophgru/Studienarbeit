@@ -1,2 +1,13 @@
 /.idea/
 /cmake-build-debug/
+/cmake-build-mingw64/
+/buildcmdln/
+/build/
+/.*/
+/CMakeFiles/
+/vcpkg/
+/src/.*/
+/src/venv/
+/.clang-format
+/src/new/__pycache__/
+/src/old/.idea/
