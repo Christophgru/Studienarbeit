@@ -14,7 +14,7 @@ add_executable(Studienarbeit
         src/new/display.cpp
         src/new/display.h
         ]]
-        src/new/test_python.cpp
+        src/new/testSocket/testsocketbackforth.cpp
         )
 
 
@@ -24,3 +24,5 @@ find_package(Python COMPONENTS Development)
 include_directories(${Python_INCLUDE_DIRS}) 
 # Link with Python library
 target_link_libraries(Studienarbeit ${Python_LIBRARIES})
+
+target_link_libraries(Studienarbeit ws2_32)

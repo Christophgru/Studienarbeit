@@ -6,7 +6,7 @@
 import sys
 sys.path.append(r'C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib')
 sys.path.append(r'C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages')
-
+sys.path.append(r'C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312')
 
 import serial
 import re
