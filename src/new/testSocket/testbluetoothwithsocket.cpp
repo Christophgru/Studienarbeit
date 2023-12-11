@@ -52,21 +52,32 @@ int main() {
 
     // Get the current time
     auto start = std::chrono::high_resolution_clock::now();
+    int number_datepoints=0;
+    try
+    {
+        /* code */
 
-    
-    for(int i=0;i<10000;i++){
-        // Dynamically allocate memory to store received data
-        char* buffer = new char[1024];  // Adjust the size based on your message size
-        int bytesRead = recv(clientSocket, buffer, 1024, 0);
+        for(int i=0;i<100000;i++){
+            
+        
+            
+            // Dynamically allocate memory to store received data
+            char* buffer = new char[1024];  // Adjust the size based on your message size
+            int bytesRead = recv(clientSocket, buffer, 1024, 0);
 
-        if (bytesRead > 0) {
-            std::cout << "Received data from client["<<i<<"]:" << buffer << std::endl;
+            if (bytesRead > 0) {
+                std::cout << "Received data from client["<<i<<"]:" << buffer << std::endl;
+                number_datepoints++;
+            }
+            
+            delete[] buffer;  // Free the allocated memory
+        
         }
-        buffer="Hey, its c                       ";
-    
-        send(clientSocket, buffer, bytesRead, 0);
     }
-
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 
     // Perform some operations or code for which you want to measure the time
 
@@ -79,7 +90,8 @@ int main() {
     double seconds = duration.count() / 1e6;
 
     // Print the time difference in seconds
-  std::cout << "Time difference: " << std::fixed << std::setprecision(3) << seconds << " seconds" << std::endl;
+  std::cout << "Time difference: " << std::fixed << std::setprecision(3) << seconds << " seconds, "<< number_datepoints 
+            <<" Datapoints resulting in "<< number_datepoints/seconds <<" fps" << std::endl;
 
 
     // Continue with the rest of your server code

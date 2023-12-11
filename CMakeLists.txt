@@ -14,7 +14,7 @@ add_executable(Studienarbeit
         src/new/display.cpp
         src/new/display.h
         ]]
-        src/new/testSocket/testsocketbackforth.cpp
+        src/new/testSocket/testbluetoothwithsocket.cpp
         )
 
 
