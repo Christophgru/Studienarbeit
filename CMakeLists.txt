@@ -5,16 +5,16 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 add_executable(Studienarbeit
-#[[
-        src/new/serial.cpp
-        src/new/serial.h
-        src/new/main.cpp
-        src/new/calc.cpp
-        src/new/calc.h
-        src/new/display.cpp
-        src/new/display.h
-        ]]
-        src/new/testSocket/testbluetoothwithsocket.cpp
+
+        src/Backend/socket.cpp
+        src/Backend/socket.h
+        src/Backend/main.cpp
+        src/Backend/calc.cpp
+        src/Backend/calc.h
+        src/Backend/display.cpp
+        src/Backend/display.h
+
+        # src/new/testSocket/withbluetooth/testbluetoothwithsocket.cpp
         )
 
 

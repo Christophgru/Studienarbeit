@@ -35,25 +35,14 @@ int main() {
         return 1;
     }
 
-    std::cout << "Server listening on port 12345...\n";
-
-    sockaddr_in clientAddress;
-    int clientSize = sizeof(clientAddress);
-    SOCKET clientSocket = accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddress), &clientSize);
-
-    if (clientSocket == INVALID_SOCKET) {
-        std::cerr << "Error accepting client connection\n";
-        closesocket(serverSocket);
-        WSACleanup();
-        return 1;
-    }
+   
 
     int i = 0;
     while (true) {
         i++;
         // Dynamically allocate memory to store received data
         char* buffer = new char[1024];  // Adjust the size based on your message size
-        int bytesRead = recv(clientSocket, buffer, 1024, 0);
+        int bytesRead = recv(serverSocket, buffer, 1024, 0);
 
         if (bytesRead > 0) {
             std::cout << "Received data from client [" << i << "]: " << buffer << std::endl;
@@ -64,7 +53,6 @@ int main() {
 
     // Continue with the rest of your server code
 
-    closesocket(clientSocket);
     closesocket(serverSocket);
     WSACleanup();
 
