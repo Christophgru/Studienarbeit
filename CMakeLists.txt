@@ -5,17 +5,29 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 add_executable(Studienarbeit
-
-        src/Backend/socket.cpp
-        src/Backend/socket.h
-        src/Backend/main.cpp
+        #src/Backend/main.cpp
+        #src/Backend/socket.cpp
+        #src/Backend/socket.h
         src/Backend/calc.cpp
         src/Backend/calc.h
-        src/Backend/display.cpp
-        src/Backend/display.h
+        #src/Backend/display.cpp
+        #src/Backend/display.h
+        #src/Backend/stringparser.cpp     
+        #src/Backend/stringparser.h
 
-        # src/new/testSocket/withbluetooth/testbluetoothwithsocket.cpp
+        
+        #src/Backend/stringparser_test.cpp
+        #src/Backend/calc_test.cpp
+        src/archive/testSocket/testpixmap/pixmap.cpp
+        
+        #src/new/testSocket/withbluetooth/testbluetoothwithsocket.cpp
+
+        
+
         )
+
+
+
 
 
 # Find Python

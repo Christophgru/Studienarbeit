@@ -4,32 +4,50 @@
 
 #ifndef STUDIENARBEIT_CALC_H
 #define STUDIENARBEIT_CALC_H
-
-/** Datenklasse für Ergebnis der Punktberechnungs methode*/
-struct point{
-public:
-    float x;
-    float y;
-    float abweichung;
-    point(float x, float y, float abweichung){
-        this->x=x;
-        this->y=y;
-        this->abweichung=abweichung;
-    }
-};
+#include <vector>
+#include "cmath"
+#include "iostream"
 
 /**Klasse für algorithmik wie winkelberechnung oder mittelwertbildung*/
-class calc {
+namespace calc {
 
-public :
+    
+/** Datenklasse für Ergebnis der Punktberechnungs methode*/
+    struct point{
+        float x;
+        float y;
+        float abweichung;
+        point(float x, float y, float abweichung=0){
+            this->x=x;
+            this->y=y;
+            this->abweichung=abweichung;
+        }
+    };
+    struct line{
+        float x;//X-intersection
+        float elevation; //dy/dx
+        float y;//Y-intersection
+        float angle;//from x pos counterclockwise
+        line(float x, float elev){
+            this->x=x;
+            this->elevation=elev;
+            this->y=-x*elev;
+            this->angle=atan(elev);
+        }
+    };
+
+
     /**getPos
      * @param resultAzimuth1: Messergebnis des ersten sensors
      * @param resultAzimuth2: Messergebnis des zweiten sensors
      * @param abstand: Abstand zwischen den beiden sensoren
      * @param theta1: abweichung des Azimuths von einer parallelen ausrichtung zum anderen Sensor
      * @param theta2: abweichung des Azimuths von einer parallelen ausrichtung zum anderen Sensor*/
-    point getPosFromAngles(float resultAzimuth1, float resultAzimuth2, float abstand, float theta1=0, float theta2=0);
+    point getPosFromAngles(std::vector<float>angles,std::vector<float>xCords);
     //todo overload getPosFromAngles for more datasources
+    float getDistance(point,line);
+    float distance(point p, std::vector<line> lines);
+    unsigned char floatToUnsignedCharInRange(float value);
 };
 
 

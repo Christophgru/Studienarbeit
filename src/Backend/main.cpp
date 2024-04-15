@@ -6,22 +6,25 @@
 #include "iostream"
 #include "calc.h"
 #include "display.h"
+#include <vector>
+#include "stringparser.h"
+
+
 int main(int argc, char** argv){
+     
     //todo: Übergabeparameter auswerten
-    int distance;
-    calc* c=new calc();
+    std::vector<float> positions;
     display* d=new display();
     //todo: serial in liste oder vektor einlesen, um anzahl dynamisch zu machen
     SocketVerwaltung s = SocketVerwaltung();
-    std::string string;
     while (true){
+        std::string string="";
         int red=s.read(string);
         if(0<red){
             printf(string.c_str());
-            float angle1;
-            float angle2;
+            std::vector<float> angles=getAnglesFromString(string);
             //Kalmann filter
-            point p=c->getPosFromAngles(angle1,angle2,distance);
+            point p=calc::getPosFromAngles(angles,positions);
             d->projectPos(p);
             int x=0;
         }else if (red!=0)
