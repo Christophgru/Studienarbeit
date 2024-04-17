@@ -14,26 +14,15 @@ namespace calc {
     
 /** Datenklasse für Ergebnis der Punktberechnungs methode*/
     struct point{
-        float x;
-        float y;
+        std::vector<float>position;
         float abweichung;
-        point(float x, float y, float abweichung=0){
-            this->x=x;
-            this->y=y;
-            this->abweichung=abweichung;
-        }
+        point(std::vector<float> f, float abweichung=0);
     };
     struct line{
-        float x;//X-intersection
-        float elevation; //dy/dx
-        float y;//Y-intersection
-        float angle;//from x pos counterclockwise
-        line(float x, float elev){
-            this->x=x;
-            this->elevation=elev;
-            this->y=-x*elev;
-            this->angle=atan(elev);
-        }
+        std::vector<float>start;
+        std::vector<float>direction;
+        line(std::vector<float> start, std::vector<float> direction);
+        
     };
 
 
@@ -48,6 +37,7 @@ namespace calc {
     float getDistance(point,line);
     float distance(point p, std::vector<line> lines);
     unsigned char floatToUnsignedCharInRange(float value);
+    bool almostEqual(double a, double b, double epsilon = 1e-8);
 };
 
 

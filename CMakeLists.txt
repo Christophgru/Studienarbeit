@@ -17,8 +17,10 @@ add_executable(Studienarbeit
 
         
         #src/Backend/stringparser_test.cpp
-        #src/Backend/calc_test.cpp
-        src/archive/testSocket/testpixmap/pixmap.cpp
+        src/Backend/calc_test.cpp
+        #src/archive/testSocket/testpixmap/pixmap.cpp
+        #src/archive/testSocket/testpixmap/painthelper.h
+        #src/archive/testSocket/testpixmap/painthelper.cpp
         
         #src/new/testSocket/withbluetooth/testbluetoothwithsocket.cpp
 

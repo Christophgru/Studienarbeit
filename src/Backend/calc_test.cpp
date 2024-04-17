@@ -2,61 +2,142 @@
 #include <cassert>
 
 
-bool almostEqual(double a, double b, double epsilon = 1e-6) {
-    return std::abs(a - b) < epsilon;
+
+using namespace calc;
+    
+
+
+
+
+int testdistance1(){
+
+    line l({0,0},{1,0});
+    point p({0,0});
+    float result =    calc::getDistance(p,l);
+    float expectedResult =  0;
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist1 passed!" << std::endl;
+
+
+}
+int testdistance2(){
+
+    line l({0,0},{1,0});
+    point p({0,0});
+    float result =    calc::getDistance(p,l);
+    float expectedResult =  0;
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist2 passed!" << std::endl;
+
+
+}
+int testdistance3(){
+
+    line l({0,0},{1,1});
+    point p({0,0});
+    float result =    calc::getDistance(p,l);
+    float expectedResult =  0;
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist3 passed!" << std::endl;
+
+
+}
+
+int testdistance4(){
+
+    line l({0,0},{0,1});
+    point p({1,0});
+    float result =    calc::getDistance(p,l);
+    float expectedResult =  1;
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist4 passed!" << std::endl;
+}
+
+int testdistance5(){
+
+    line l({0,0},{1,1});
+    point p({2,2});
+    float result =    calc::getDistance(p,l);
+    float expectedResult = 0 ;
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist5 passed!" << std::endl;
+}
+
+int testdistance6(){
+
+    line l({0,0},{1,1});
+    point p({-1,1});
+    float result =    calc::getDistance(p,l);
+    float expectedResult = sqrt(2) ;
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist6 passed!" << std::endl;
+}
+
+int testdistance7(){
+
+    line l({-2,-2},{1,1});
+    point p({-1,1});
+    float result =    calc::getDistance(p,l);
+    float expectedResult = sqrt(2);
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist7 passed!" << std::endl;
+}
+
+int testdistance8(){
+
+    line l({-2,-2},{1,1});
+    point p({-1,1});
+    float result =    calc::getDistance(p,l);
+    float expectedResult = sqrt(2) ;
+    
+    // Assert that the result matches the expected result
+    assert(result == expectedResult);
+    
+    std::cout << "Test dist8 passed!" << std::endl;
 }
 
 
 int main(int argc, char const *argv[])
 {
-    line l1(0,0);
-    point p1(0,0);
-    float result1 =    calc::getDistance(p1,l1);
-    float expectedResult1 =  0;
-    
-    // Assert that the result matches the expected result
-    assert(result1 == expectedResult1);
-    
-    std::cout << "Test 1 passed!" << std::endl;
+
+try
+{
+    testdistance1();
+    testdistance2();
+    testdistance3();
+    testdistance4();
+    testdistance5();
+    testdistance6();
+    testdistance7();
+    testdistance8();
+}
+catch(const std::exception& e)
+{
+    std::cerr << e.what() << '\n';
+}
 
 
-
-    line l2(5,40);
-    point p2(0,0);
-    float result2 =    calc::getDistance(p2,l2);
-    float expectedResult2 =  5;
-    
-    std::cout<<result2<<std::endl;
-    // Assert that the result matches the expected result
-    assert(almostEqual(result2,expectedResult2,0.1));
-    
-    std::cout << "Test 2 passed!" << std::endl;
-
-
-
-    line l3(-2000,0.001);
-    point p3(5,-2);
-    float result3 =    calc::getDistance(p3,l3);
-    float expectedResult3 =  4;
-    
-    std::cout<<result3<<std::endl;
-    // Assert that the result matches the expected result
-    assert(almostEqual(result3,expectedResult3,0.001));
-    
-    std::cout << "Test 3 passed!" << std::endl;
-
-
-     line l4(-2,1);
-    point p4(0,0);
-    float result4 =    calc::getDistance(p4,l4);
-    float expectedResult4 =  sqrt(2);
-    
-    std::cout<<result4<<std::endl;
-    // Assert that the result matches the expected result
-    assert(almostEqual(result4,expectedResult4,0.001));
-    
-    std::cout << "Test 4 passed!" << std::endl;
-    
-
-    return 0;
+   
+   
 }
