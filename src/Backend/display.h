@@ -9,7 +9,7 @@
 class display {
 public:
     /**Visualisierung der Position eines Punktes*/
-    void projectPos(point p);
+    void projectPos(calc::point p);
 };
 
 

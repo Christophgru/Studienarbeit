@@ -1,6 +1,7 @@
 #include "stringparser.h"
 
 std::vector<float> getAnglesFromString(std::string str){
+    //std::cout<<"string:\""<<str<<"\"";
     std::vector<float>numbers;
     std::string token;
   
@@ -13,7 +14,7 @@ std::vector<float> getAnglesFromString(std::string str){
         // Get the matched number and convert it to an integer
         std::smatch match = *it;
         try {
-            numbers.push_back(std::stoi(match.str()));
+            numbers.push_back(std::stoi(match.str())+90);
         } catch (...) {
             std::cerr << "Error parsing token: " << match.str() << std::endl;
         }

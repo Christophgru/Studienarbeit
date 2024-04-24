@@ -3,7 +3,16 @@
 //
 #include "iostream"
 #include "display.h"
-void display::projectPos(point p) {
+void display::projectPos(calc::point p) {
     //erstmal nur cmd ausgabe, später gui?
-      std::cout<<"Xpos="<< p.x<<" Ypos="<<p.y<<" Abweichung="<<p.abweichung<< std::endl;
+    try
+    {
+       std::cout<<"Xpos="<< p.getx()<<" \t\tYpos="<<p.gety()<<" Abweichung="<<p.abweichung<< std::endl;
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    
+     
 }
