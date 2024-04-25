@@ -68,9 +68,9 @@ calc::line::line(std::vector<float> start, std::vector<float> direction){//ay+bx
 
 }
 
-calc::point::point(std::vector<float> f, float abweichung){
+calc::point::point(std::vector<float> f, float Unsicherheit){
     position=f;
-    this->abweichung=abweichung;
+    this->Unsicherheit=Unsicherheit;
 }
 float calc::point::getx(){
     return this->position[0];

@@ -15,8 +15,8 @@ namespace calc {
 /** Datenklasse für Ergebnis der Punktberechnungs methode*/
     struct point{
         std::vector<float>position;
-        float abweichung;
-        point(std::vector<float> f, float abweichung=0);
+        float Unsicherheit;
+        point(std::vector<float> f, float Unsicherheit=0);
         void setx(float x);
         float getx();
         void sety(float y);
@@ -41,8 +41,8 @@ namespace calc {
      * @param resultAzimuth1: Messergebnis des ersten sensors
      * @param resultAzimuth2: Messergebnis des zweiten sensors
      * @param abstand: Abstand zwischen den beiden sensoren
-     * @param theta1: abweichung des Azimuths von einer parallelen ausrichtung zum anderen Sensor
-     * @param theta2: abweichung des Azimuths von einer parallelen ausrichtung zum anderen Sensor*/
+     * @param theta1: Unsicherheit des Azimuths von einer parallelen ausrichtung zum anderen Sensor
+     * @param theta2: Unsicherheit des Azimuths von einer parallelen ausrichtung zum anderen Sensor*/
     point getPosFromAngles(std::vector<calc::SensorValue>sensorData);
     //todo overload getPosFromAngles for more datasources
     float distance(point,line);

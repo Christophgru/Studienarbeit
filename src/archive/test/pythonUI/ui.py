@@ -44,7 +44,7 @@ def update_display(msg):
             return
 
     # Update the GUI with the received coordinates
-    label.config(text=f"Xpos: {coordinates.get('Xpos', 'N/A')}    Ypos: {coordinates.get('Ypos', 'N/A')}    Abweichung: {coordinates.get('Abweichung', 'N/A')}")
+    label.config(text=f"Xpos: {coordinates.get('Xpos', 'N/A')}    Ypos: {coordinates.get('Ypos', 'N/A')}    Unsicherheit: {coordinates.get('Unsicherheit', 'N/A')}")
 
 
 
