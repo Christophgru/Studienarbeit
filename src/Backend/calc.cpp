@@ -7,14 +7,14 @@
 calc::point calc::getPosFromAngles(std::vector<float>angles,std::vector<float>xCords){
     std::vector<calc::line>lines;
     int maxindex=(angles.size() < xCords.size()) ? angles.size() : xCords.size();
-    std::cout<<"maxindex: "<<maxindex;
+    //std::cout<<"maxindex: "<<maxindex;
     for (int i = 0; i < maxindex; i++)
     {
         float angle=angles.at(i);
         float angle_rad=angle/180*M_PI;
         float xCord=xCords.at(i);
-        std::cout<<"[angle: "<<sinf(angle_rad)<<"/"<<angle<<" pos: "<<xCord <<"]\t ";
-        std::cout<<"["<<sinf(angle_rad)<<"|"<<-cosf(angle_rad)<<"]\t";
+        //std::cout<<"[angle: "<<sinf(angle_rad)<<"/"<<angle<<" pos: "<<xCord <<"]\t ";
+        //std::cout<<"["<<sinf(angle_rad)<<"|"<<-cosf(angle_rad)<<"]\t";
         line l=line({xCord,0},{sinf(angle_rad),-cosf(angle_rad)});
         
         lines.push_back(l);

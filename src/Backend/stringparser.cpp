@@ -16,7 +16,7 @@ std::vector<float> getAnglesFromString(std::string str){
         try {
             numbers.push_back(std::stoi(match.str())+90);
         } catch (...) {
-            std::cerr << "Error parsing token: " << match.str() << std::endl;
+            //std::cerr << "Error parsing token: " << match.str() << std::endl;
         }
         ++it;
     }

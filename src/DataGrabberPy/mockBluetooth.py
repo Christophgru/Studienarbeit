@@ -17,19 +17,19 @@ import websockets
 port= 12345
 clients = set()
 
-
+basetimesleep=0.101
 
 def getanchor1(val1_list,theta2_offset=0):
     val1 =90+math.cos(time.time())*40+theta2_offset
-    print(val1)
+    print(val1) 
     val1_list.append(val1)
-    time.sleep(0.01+random.uniform(0, 1)*0.01)
+    time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
 
        
 def getanchor2(val2_list,theta3_offset=0):
     val2 =90+math.cos(time.time())*40+theta3_offset
     val2_list.append(val2)
-    time.sleep(0.01+random.uniform(0, 1)*0.01)
+    time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
    
 def on_close():
     exit()

@@ -5,7 +5,7 @@ project(Studienarbeit)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(Studienarbeit
-        #src/Backend/main.cpp
+        src/Backend/main.cpp
         src/Backend/socket.cpp
         src/Backend/socket.h
         src/Backend/calc.cpp
@@ -19,19 +19,14 @@ add_executable(Studienarbeit
         #src/Backend/stringparser_test.cpp
         #src/Backend/calc_test.cpp
         #src/archive/test/testpixmap/pixmap.cpp
-        src/archive/test/cppUI/main.cpp
+       # src/archive/test/cppUI/main.cpp
         
         
 
         )
-        set(SFML_ROOT D:/Programs/SFML-2.6.1-mingw)
-        find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)
+        
 
-
-
-        if (SFML_FOUND)
-                target_link_libraries(Studienarbeit ws2_32 sfml-system sfml-window sfml-graphics )
-        endif()
+        target_link_libraries(Studienarbeit ws2_32)
 
 
         

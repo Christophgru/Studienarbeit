@@ -40,7 +40,7 @@ int SocketVerwaltung::initSocket(std::string ip, int port){
         return 2;
     }
 
-    std::cout << "Connected to server!" << std::endl;
+    std::cout << "Connected to Datasource!" << std::endl;
 
     // Send data to the server
     std::string sendData = "Hello, Server!";
@@ -70,7 +70,7 @@ int SocketVerwaltung::initSocket(std::string ip, int port){
                 //std::cout << "Received data from client:" << buffer << std::endl;
                 number_datepoints++;
                 s->assign(buffer);
-                std::cout<<" "<<bytesRead<<" Bytes read";
+                //std::cout<<" "<<bytesRead<<" Bytes read";
                 if(bytesRead>25){
                     printf("\ndouble frame received, throwing away\n");//or maybe only send first half?
                     s->assign("");
