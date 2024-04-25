@@ -30,13 +30,20 @@ namespace calc {
     };
 
 
+    struct SensorValue {
+    float theta;
+    float val;
+    float xpos;
+    };
+
+
     /**getPos
      * @param resultAzimuth1: Messergebnis des ersten sensors
      * @param resultAzimuth2: Messergebnis des zweiten sensors
      * @param abstand: Abstand zwischen den beiden sensoren
      * @param theta1: abweichung des Azimuths von einer parallelen ausrichtung zum anderen Sensor
      * @param theta2: abweichung des Azimuths von einer parallelen ausrichtung zum anderen Sensor*/
-    point getPosFromAngles(std::vector<float>angles,std::vector<float>xCords);
+    point getPosFromAngles(std::vector<calc::SensorValue>sensorData);
     //todo overload getPosFromAngles for more datasources
     float distance(point,line);
     float meanDistance(point p, std::vector<line> lines);

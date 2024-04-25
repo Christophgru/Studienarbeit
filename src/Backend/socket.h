@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <vector>
 #include <algorithm>
-#define BUFSIZE 25
+#define BUFSIZE 1048
 
 class SocketVerwaltung{
     int number_datepoints=0;

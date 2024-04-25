@@ -1,26 +1,26 @@
 #include "stringparser.h"
 
-std::vector<float> getAnglesFromString(std::string str){
-    //std::cout<<"string:\""<<str<<"\"";
-    std::vector<float>numbers;
-    std::string token;
-  
-    
-        std::regex numberRegex(R"(-?\d+)");
+using json = nlohmann::json;
 
-    // Iterate over each match in the input string
-    auto it = std::sregex_iterator(str.begin(), str.end(), numberRegex);
-    while (it != std::sregex_iterator()) {
-        // Get the matched number and convert it to an integer
-        std::smatch match = *it;
-        try {
-            numbers.push_back(std::stoi(match.str())+90);
-        } catch (...) {
-            //std::cerr << "Error parsing token: " << match.str() << std::endl;
+
+
+
+std::vector<calc::SensorValue> getangles(const std::string& s) {
+    std::vector<calc::SensorValue> sensorValues;
+
+    try {
+        json j = json::parse(s);
+
+        for (const auto& item : j) {
+            calc::SensorValue value;
+            value.theta = item["theta"].get<float>();
+            value.val = item["val"].get<float>();
+            value.xpos = item["xpos"].get<float>();
+            sensorValues.push_back(value);
         }
-        ++it;
+    } catch (const std::exception& e) {
+        std::cerr << "Error parsing JSON: " << e.what() << std::endl;
     }
-    return numbers;
-    
 
-};
+    return sensorValues;
+}

@@ -1,4 +1,5 @@
 
+import json
 import math
 import random
 import signal
@@ -17,32 +18,32 @@ import websockets
 port= 12345
 clients = set()
 
-basetimesleep=0.101
+basetimesleep=0.1
 
-def getanchor1(val1_list,theta2_offset=0):
-    val1 =90+math.cos(time.time())*40+theta2_offset
+def getanchor1(val1_list,):
+    val1 =math.cos(time.time())*10
     print(val1) 
     val1_list.append(val1)
     time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
 
        
-def getanchor2(val2_list,theta3_offset=0):
-    val2 =90+math.cos(time.time())*40+theta3_offset
+def getanchor2(val2_list,):
+    val2 =math.cos(time.time())*10
     val2_list.append(val2)
     time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
    
 def on_close():
     exit()
 
-def getValues(theta2_offset=0
-              , theta3_offset=0
+def getValues(theta2_offset=60
+              , theta3_offset=120
               ):
     val1_list=[]
     val2_list=[]
 
-    thread1 = threading.Thread(target=getanchor1, args=(val1_list,theta2_offset,))
+    thread1 = threading.Thread(target=getanchor1, args=(val1_list,))
 
-    thread2 = threading.Thread(target=getanchor2, args=(val2_list,theta3_offset,))
+    thread2 = threading.Thread(target=getanchor2, args=(val2_list,))
     thread1.start() 
     thread2.start()
 
@@ -62,7 +63,7 @@ def getValues(theta2_offset=0
         # Set val1 to None if the index is out of range
         val2 = None
     
-    return [val1,val2]#sin/cos(time)
+    return [{"theta":theta2_offset,"val":val1,"xpos":0},{"theta":theta3_offset,"val":val2,"xpos":3}]
 
 
     
@@ -169,7 +170,7 @@ def main():
                 last_value[1] = temp[1]
                 changed = True
             if changed:
-                message_final = "\t\t" + str(last_value) + "\t\t\t\t\t[]"
+                message_final = json.dumps(last_value)
               #  print(message_final)
                 send_data_to_all_clients(message_final)
         except Exception as e:

@@ -12,8 +12,6 @@
 
 int main(int argc, char** argv){
      
-    //todo: Übergabeparameter auswerten
-    std::vector<float> positions={0,3};
     display* d=new display();
     //todo: serial in liste oder vektor einlesen, um anzahl dynamisch zu machen
     SocketVerwaltung s = SocketVerwaltung();
@@ -21,8 +19,8 @@ int main(int argc, char** argv){
         std::string string="";
         int red=s.read(&string);
         if(0<red){
-            std::vector<float> angles=getAnglesFromString(string);
-            calc::point p=calc::getPosFromAngles(angles,positions);
+            std::vector<calc::SensorValue> angles=getangles(string);
+            calc::point p=calc::getPosFromAngles(angles);
             
             //Kalmann filter
             d->projectPos(p);

@@ -4,6 +4,8 @@ project(Studienarbeit)
 
 set(CMAKE_CXX_STANDARD 14)
 
+add_subdirectory(external/json)
+
 add_executable(Studienarbeit
         src/Backend/main.cpp
         src/Backend/socket.cpp
@@ -25,8 +27,9 @@ add_executable(Studienarbeit
 
         )
         
+        target_link_libraries(Studienarbeit PRIVATE ws2_32 nlohmann_json::nlohmann_json)
 
-        target_link_libraries(Studienarbeit ws2_32)
+        #target_link_libraries(Studienarbeit ws2_32)
 
 
         

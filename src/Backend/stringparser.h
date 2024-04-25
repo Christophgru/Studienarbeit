@@ -4,5 +4,10 @@
 #include <sstream>
 #include <iostream>  
 #include <regex>
+#include <nlohmann/json.hpp>
+#include "calc.h"
 
 std::vector<float> getAnglesFromString(std::string str);
+
+
+std::vector<calc::SensorValue> getangles(const std::string& s) ;

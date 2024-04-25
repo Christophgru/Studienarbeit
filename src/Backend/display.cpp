@@ -25,7 +25,7 @@ void display::projectPos(calc::point p) {
             }
             auto seconds =std::chrono::duration_cast<std::chrono::seconds>(duration);//get seconds
             auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration) % 1000;
-            std::cerr << "Send to Display failed: " << WSAGetLastError() <<" Bytes sent, try reconnect in " <<seconds.count()<<"."<<milliseconds.count()<<"s"<< std::endl;//print seconds.milliseconds
+            //std::cerr << "Send to Display failed: " << WSAGetLastError() <<" Bytes sent, try reconnect in " <<seconds.count()<<"."<<milliseconds.count()<<"s"<< std::endl;//print seconds.milliseconds
             return;
         }
         std::cout << "sent " << result << " Bytes";

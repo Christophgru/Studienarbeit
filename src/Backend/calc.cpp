@@ -4,25 +4,24 @@
 #include "calc.h"
 
 
-calc::point calc::getPosFromAngles(std::vector<float>angles,std::vector<float>xCords){
+calc::point calc::getPosFromAngles(std::vector<calc::SensorValue>sensorData){
     std::vector<calc::line>lines;
-    int maxindex=(angles.size() < xCords.size()) ? angles.size() : xCords.size();
     //std::cout<<"maxindex: "<<maxindex;
-    for (int i = 0; i < maxindex; i++)
+    for (calc::SensorValue value :sensorData)
     {
-        float angle=angles.at(i);
+        float angle=value.theta+value.val;
         float angle_rad=angle/180*M_PI;
-        float xCord=xCords.at(i);
-        //std::cout<<"[angle: "<<sinf(angle_rad)<<"/"<<angle<<" pos: "<<xCord <<"]\t ";
-        //std::cout<<"["<<sinf(angle_rad)<<"|"<<-cosf(angle_rad)<<"]\t";
-        line l=line({xCord,0},{sinf(angle_rad),-cosf(angle_rad)});
+        float xCord=value.xpos;
+        std::cout<<" theta:"<<value.theta<<" sensor_out: "<<value.val<<" [angle: "<<sinf(angle_rad)<<"/"<<angle<<" pos: "<<xCord <<"] ";
+        std::cout<<"["<<sinf(angle_rad)<<"|"<<cosf(angle_rad)<<"]\n";
+        line l=line({xCord,0},{sinf(angle_rad),cosf(angle_rad)});
         
         lines.push_back(l);
     }
     //todo: implement
     point p=calc::gradientDescent(point({0.0,0.0}),lines);
 
-   // std::cout<<"calculated pos ("<<p.x<<"|"<<p.y<<")"<<" from az1:"<<resultAzimuth1<<" az2:"<<resultAzimuth2<<" abstand: "<<abstand<<std::endl;
+    std::cout<<"calculated pos ("<<p.getx()<<"|"<<p.gety()<<")"<<std::endl<<std::endl<<std::endl;
     return p;
 
 }

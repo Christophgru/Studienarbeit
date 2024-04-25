@@ -1,0 +1,3 @@
+[submodule "external/JSON"]
+	path = external/JSON
+	url = https://github.com/nlohmann/json.git

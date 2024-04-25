@@ -1,6 +1,15 @@
 #include "socket.h"
 
 
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+
+
+
+
 SocketVerwaltung::SocketVerwaltung(){
     
    WSADATA wsaData;
@@ -67,16 +76,20 @@ int SocketVerwaltung::initSocket(std::string ip, int port){
         
 
             if (bytesRead > 0) {
-                //std::cout << "Received data from client:" << buffer << std::endl;
+                std::cout << "Received data from client:" << buffer << std::endl;
                 number_datepoints++;
                 s->assign(buffer);
+                std::cout<<".";
                 //std::cout<<" "<<bytesRead<<" Bytes read";
-                if(bytesRead>25){
+                if(bytesRead>BUFSIZE){
                     printf("\ndouble frame received, throwing away\n");//or maybe only send first half?
                     s->assign("");
-                    buffer={0};
+                    memset(buffer, 0, BUFSIZE);
                 }else
+                
+                    memset(buffer, 0, BUFSIZE);
                     return bytesRead;
+                    
             }else if (bytesRead==0)
             {
                 printf("no data rec");
