@@ -3,14 +3,32 @@
 //
 
 #include "display.h"
+#include <cstring> // for std::strlen
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 bool reconnectNeeded = false;
 
-void display::projectPos(calc::point p) {
+void display::projectPos(std::vector<calc::SensorValue> angles, calc::point p) {
     try {
-        char message[256];
-        //std::cout << "Xpos=" << p.getx() << " \t\tYpos=" << p.gety() << " Unsicherheit=" << p.Unsicherheit << std::endl;
+        json j;
+        j["point"]["position"] = p.position;
+        j["point"]["Unsicherheit"] = p.Unsicherheit;
 
-        std::sprintf(message, "Xpos=%.5f\tYpos=%.5f\tUnsicherheit=%.2f", p.getx(), p.gety(), p.Unsicherheit);
+        for (size_t i = 0; i < angles.size(); ++i) {
+            json sensor;
+            sensor["theta"] = angles[i].theta;
+            sensor["val"] = angles[i].val;
+            sensor["xpos"] = angles[i].xpos;
+            j["sensor_values"].push_back(sensor);
+        }
+
+        // Convert JSON to string
+        std::string jsonStr = j.dump();
+        const char* message=jsonStr.c_str();
+
+        // Output JSON string
+        std::cout << jsonStr << std::endl;
+
         int result = send(ConnectSocket, message, strlen(message), 0);
         if (result == SOCKET_ERROR) {
           

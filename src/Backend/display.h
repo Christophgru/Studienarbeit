@@ -12,7 +12,7 @@
 class display {
 public:
     /**Visualisierung der Position eines Punktes*/
-    void projectPos(calc::point p);
+    void projectPos(std::vector<calc::SensorValue> angles,calc::point p);
     int setup();
     ~display();
     display();

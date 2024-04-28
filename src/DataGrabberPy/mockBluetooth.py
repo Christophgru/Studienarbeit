@@ -21,7 +21,7 @@ clients = set()
 basetimesleep=0.1
 
 def getanchor1(val1_list,):
-    val1 =math.cos(time.time())*10
+    val1 =math.sin(time.time())*10
     print(val1) 
     val1_list.append(val1)
     time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)

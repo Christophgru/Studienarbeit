@@ -162,6 +162,21 @@ int testgrad3(){
     std::cout << "Test grad3 passed!" << std::endl;
 }
 
+
+int testgrad4(){
+    line l2({0,0},{1,1.75});
+    line l1({0,3},{-1,1.66});
+    std::vector<line> lines={l1,l2};
+    point sp({0,0});
+    point res=gradientDescent(sp,lines);
+    point expectedRes=point({2,2});
+    assert(almostEqual(res.getx(),expectedRes.getx(),0.001f));
+    assert(almostEqual(res.gety(),expectedRes.gety(),0.001f));
+    
+    std::cout << "Test grad3 passed!" << std::endl;
+}
+
+
 int main(int argc, char const *argv[])
 {
 

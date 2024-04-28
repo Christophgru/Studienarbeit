@@ -23,7 +23,7 @@ int main(int argc, char** argv){
             calc::point p=calc::getPosFromAngles(angles);
             
             //Kalmann filter
-            d->projectPos(p);
+            d->projectPos(angles, p);
             int x=0;
         }else if (red!=0)
         {

@@ -1,3 +1,5 @@
+import json
+import math
 import socket
 import threading
 import time
@@ -5,7 +7,15 @@ import tkinter as tk
 import asyncio
 #C:\Python312\python.exe .\src\archive\test\pythonUI\ui.py
 
+
+
+
+
+
+
+
 def server_thread():
+    firstcall=True
     while True:
         try:
             HOST = '127.0.0.1'  # localhost
@@ -27,28 +37,35 @@ def server_thread():
                             
                             msg = data.decode()
                             print("Received:", msg)
-                            update_display(msg)
+                            update_display(msg, firstcall)
+                            firstcall=False
         except Exception as e:
              print(f"Exception occurred: {e}. Restarting server...")
 
-def update_display(msg):
-    # Extract coordinates from the message
-    coordinates = {}
-    parts = msg.split()
-    for part in parts:
-        if '=' in part:
-            key, value = part.split('=')
-            coordinates[key] = float(value)
+def update_display(msg, firstcall):
+    try:
+        # Parse the JSON message
+        data = json.loads(msg)
+
+        # Extract xpos and ypos from the 'point' dictionary
+        xpos, ypos = data.get('point', {}).get('position', [None, None])
+
+        # Check if xpos and ypos are not None
+        if xpos is not None and ypos is not None:
+            # Update the GUI with the received coordinates
+            label.config(text=f"Xpos: {xpos}    Ypos: {ypos}    Unsicherheit: {data.get('point', {}).get('Unsicherheit', 'N/A')}")
+            update_point_on_canvas(xpos, ypos)
+
+            # Extract sensor values
+            sensor_values = data.get('sensor_values', [])
+
+            # Visualize sensors
+            visualize_sensors(sensor_values, firstcall)
         else:
             print("Invalid message format:", msg)
-            return
 
-    # Update the GUI with the received coordinates
-    label.config(text=f"Xpos: {coordinates.get('Xpos', 'N/A')}    Ypos: {coordinates.get('Ypos', 'N/A')}    Unsicherheit: {coordinates.get('Unsicherheit', 'N/A')}")
-    xpos = coordinates.get('Xpos', None)
-    ypos = coordinates.get('Ypos', None)
-    if xpos is not None and ypos is not None:
-        update_point_on_canvas(xpos, ypos)
+    except json.JSONDecodeError:
+        print("Invalid JSON format:", msg)
 
 def update_point_on_canvas(xpos, ypos):
     # Clear existing points
@@ -56,27 +73,53 @@ def update_point_on_canvas(xpos, ypos):
 
     # Calculate canvas coordinates
     canvas_x = (xpos - X_MIN) * (CANVAS_WIDTH / (X_MAX - X_MIN))
-    canvas_y = CANVAS_HEIGHT - (ypos - Y_MIN) * (CANVAS_HEIGHT / (Y_MAX - Y_MIN))
+    canvas_y = CANVAS_HEIGHT - (math.pi*ypos - Y_MIN) * (CANVAS_HEIGHT / (Y_MAX - Y_MIN))
+    print(f"canvasy: {canvas_y} posy:{ypos}")
 
     # Draw new point
     canvas.create_oval(canvas_x - POINT_SIZE, canvas_y - POINT_SIZE, canvas_x + POINT_SIZE, canvas_y + POINT_SIZE, fill="red", tags="point")
 
+def visualize_sensors(sensor_values, firstcall):
+    # Clear existing sensor visualizations
+    canvas.delete("sensordata")
+
+    for sensor in sensor_values:
+        theta = math.radians(sensor.get('theta', 0))
+        val = math.radians(sensor.get('val', 0))
+        resAngle=theta-val
+        xpos = sensor.get('xpos', 0)
+
+
+        # Calculate canvas coordinates for the sensor position
+        canvas_x = (xpos - X_MIN) * (CANVAS_WIDTH / (X_MAX - X_MIN))
+
+        # Draw green box
+        canvas.create_rectangle(canvas_x - 5, baseY-5, canvas_x + 5, baseY+5, fill="green", tags="sensor")
+
+        # Calculate endpoint of the line based on angle and length
+        line_length = 500  # Adjust as needed
+        end_x = canvas_x + line_length * math.cos(resAngle) 
+        end_y = baseY - line_length * math.sin(resAngle)  * (width / height)  # Adjust angle based on resolution
+
+        # Draw line originating from the box
+        canvas.create_line(canvas_x, baseY, end_x, end_y, fill="black", tags="sensordata")
+        """  if firstcall:
+         # Draw short lines around the sensor
+            for angle in range(0, 360, 10):
+                angle_rad = math.radians(angle)
+                short_line_length = 30
+                short_end_x = canvas_x + short_line_length * math.cos(angle_rad)
+                short_end_y = baseY - short_line_length * math.sin(angle_rad) * (width / height)
+                canvas.create_line(canvas_x, baseY, short_end_x, short_end_y, fill="black", tags="sensor") """
+
 
 
 def draw_axes():
-    height=Y_MAX-Y_MIN
-
-    ratioh=(height+Y_MIN)/height
-    print(f"height: {height}, base {height+Y_MIN}, ratio: {ratioh}" )
-    baseY=CANVAS_HEIGHT *ratioh
+    
 
     # Draw x-axis
     canvas.create_line(0, baseY, CANVAS_WIDTH, baseY, fill="black")
-
-    width=X_MAX-X_MIN
-    ratiow=1-(width+X_MIN)/width
-    print(f"width: {width}, base {width+X_MIN}, ratio: {ratiow}" )
-    baseX=CANVAS_WIDTH *ratiow
+   
 
 
     # Draw y-axis
@@ -106,13 +149,21 @@ def main_async():
     root.mainloop()
 
 if __name__ == "__main__":
+
+    # Initialize constants for the canvas
     POINT_SIZE = 5
     TICK_SIZE = 5
-    X_MIN, X_MAX = -2, 5
-    Y_MIN, Y_MAX = -1, 5
-    # Initialize constants for the canvas
+    X_MIN, X_MAX = -1, 20
+    Y_MIN, Y_MAX = -1, 4
     CANVAS_WIDTH, CANVAS_HEIGHT = 800, 800
     POINT_SIZE = 5
+    height=Y_MAX-Y_MIN
+    ratioh=(height+Y_MIN)/height
+    width=X_MAX-X_MIN
+    ratiow=1-(width+X_MIN)/width
+    baseX=CANVAS_WIDTH *ratiow
+    baseY=CANVAS_HEIGHT *ratioh
+   
     # Initialize Tkinter GUI
     root = tk.Tk()
     root.title("Coordinates Display")
