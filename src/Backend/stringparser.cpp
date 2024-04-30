@@ -9,6 +9,7 @@ std::vector<calc::SensorValue> getangles(const std::string& s) {
     std::vector<calc::SensorValue> sensorValues;
 
     try {
+        std::cout<<s<<std::endl;
         size_t lastBracketPos = s.find_last_of('[');
 
         // Extract the content of the last square brackets

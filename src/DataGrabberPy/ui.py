@@ -163,8 +163,8 @@ if __name__ == "__main__":
     POINT_SIZE = 5
     TICK_SIZE = 5
     X_MIN, X_MAX = -1, 5
-    Y_MIN, Y_MAX = -1, 40
-    CANVAS_WIDTH, CANVAS_HEIGHT = 800, 800
+    Y_MIN, Y_MAX = -1, 5
+    CANVAS_WIDTH, CANVAS_HEIGHT = 500, 500
     POINT_SIZE = 5
     height=Y_MAX-Y_MIN
     ratioh=(height+Y_MIN)/height

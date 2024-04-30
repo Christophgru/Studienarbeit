@@ -20,50 +20,59 @@ clients = set()
 
 basetimesleep=0.02 #avg time will be 1.5x as much
 
-def getanchor1(val1_list,):
-    val1 =math.sin(time.time())*10
-    print(val1) 
-    val1_list.append(val1)
+def getanchor(val1_list,param1,param2):
+    val=None
+    if param1==0:
+        val =math.cos(time.time())*param2
+    if param1==1:
+        val =math.sin(time.time())*param2
+    print(val) 
+    val1_list.append(val)
     time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
 
        
-def getanchor2(val2_list,):
-    val2 =math.cos(time.time())*10
-    val2_list.append(val2)
-    time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
+
    
 def on_close():
     exit()
 
-def getValues(theta2_offset=80#+20
-              , theta3_offset=100#-20
+def getValues(
               ):
-    val1_list=[]
-    val2_list=[]
+    #should be passed
+    theta0_offset=70
+    theta1_offset=120
+    thetalist=[theta0_offset, theta1_offset]
+    xposlist=[0,3]
+    vallist=[]
+    threadlist=[]
+    results=[]
+    changed=False
+    for i in range(2):
+        vallist.append([])
+        threadlist.append(None)
+        results.append(None)
+        threadlist[i] = threading.Thread(target=getanchor, args=(vallist[i],i,10))
+        threadlist[i].start() 
 
-    thread1 = threading.Thread(target=getanchor1, args=(val1_list,))
+    for i in range(2):
+        threadlist[i].join()
 
-    thread2 = threading.Thread(target=getanchor2, args=(val2_list,))
-    thread1.start() 
-    thread2.start()
+    for i in range(2):
+        try:
+        # Retrieve the result from the list
+            results[i] = vallist[i][0]
+            changed=True
+        except IndexError:
+            # Set val1 to None if the index is out of range
+            results[i] = None
+            
+    for i in range(2):
+        results[i]={"theta":thetalist[i],"val":results[i],"xpos":xposlist[i]}
 
-    thread1.join()
-    thread2.join()
-
-    try:
-    # Retrieve the result from the list
-        val1 = val1_list[0]
-    except IndexError:
-        # Set val1 to None if the index is out of range
-        val1 = None
-    try:
-    # Retrieve the result from the list
-        val2 = val2_list[0]
-    except IndexError:
-        # Set val1 to None if the index is out of range
-        val2 = None
-    
-    return [{"theta":theta2_offset,"val":val1,"xpos":0},{"theta":theta3_offset,"val":val2,"xpos":3}]
+    if changed:
+        return results
+    else:
+        return 0
 
 
     
@@ -161,16 +170,9 @@ def main():
     while True:
         try:
             temp = getValues()
-            changed = False
-            if temp[0] is not None:
-                last_value[0] = temp[0]
-                changed = True
-            if temp[1] is not None:
-                last_value[1] = temp[1]
-                changed = True
-            if changed:
-                message_final = json.dumps(last_value)
-              #  print(message_final)
+            if temp!=0:
+                message_final = json.dumps(temp)
+                #print(message_final)
                 send_data_to_all_clients(message_final)
         except Exception as e:
             print(f"Error in Bluetooth read: {e}")
