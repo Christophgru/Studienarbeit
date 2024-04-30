@@ -9,7 +9,7 @@ using namespace calc;
 
 
 
-int testdistance1(){
+void testdistance1(){
 
     line l({0,0},{1,0});
     point p({0,0});
@@ -23,7 +23,7 @@ int testdistance1(){
 
 
 }
-int testdistance2(){
+void testdistance2(){
 
     line l({0,0},{1,0});
     point p({0,0});
@@ -37,7 +37,7 @@ int testdistance2(){
 
 
 }
-int testdistance3(){
+void testdistance3(){
 
     line l({0,0},{1,1});
     point p({0,0});
@@ -52,7 +52,7 @@ int testdistance3(){
 
 }
 
-int testdistance4(){
+void testdistance4(){
 
     line l({0,0},{0,1});
     point p({1,0});
@@ -65,7 +65,7 @@ int testdistance4(){
     std::cout << "Test dist4 passed!" << std::endl;
 }
 
-int testdistance5(){
+void testdistance5(){
 
     line l({0,0},{1,1});
     point p({2,2});
@@ -78,7 +78,7 @@ int testdistance5(){
     std::cout << "Test dist5 passed!" << std::endl;
 }
 
-int testdistance6(){
+void testdistance6(){
 
     line l({0,0},{1,1});
     point p({-1,1});
@@ -91,7 +91,7 @@ int testdistance6(){
     std::cout << "Test dist6 passed!" << std::endl;
 }
 
-int testdistance7(){
+void testdistance7(){
 
     line l({-2,-2},{1,1});
     point p({-1,1});
@@ -104,7 +104,7 @@ int testdistance7(){
     std::cout << "Test dist7 passed!" << std::endl;
 }
 
-int testdistance8(){
+void testdistance8(){
 
     line l({0,0},{1,0});
     for (int i = 0; i < 20; i++)
@@ -126,7 +126,7 @@ int testdistance8(){
 
 
 
-int testgrad1(){
+void testgrad1(){
     line l1({0,2},{1,0});
     std::vector<line> lines={l1};
     point sp({0,0});
@@ -137,7 +137,7 @@ int testgrad1(){
     std::cout << "Test grad1 passed!" << std::endl;
 }
 
-int testgrad2(){
+void testgrad2(){
     line l2({2,0},{0,1});
     std::vector<line> lines={l2};
     point sp({0,0});
@@ -149,7 +149,7 @@ int testgrad2(){
     std::cout << "Test grad2 passed!" << std::endl;
 }
 
-int testgrad3(){
+void testgrad3(){
     line l2({2,0},{0,1});
     line l1({0,2},{1,0});
     std::vector<line> lines={l1,l2};
@@ -163,12 +163,15 @@ int testgrad3(){
 }
 
 
-int testgrad4(){
+void testgrad4(){
     line l2({0,0},{1,1.75});
     line l1({0,3},{-1,1.66});
     std::vector<line> lines={l1,l2};
     point sp({0,0});
     point res=gradientDescent(sp,lines);
+    std::cout<<"Result: ("<<res.getx()<<"|"<< res.gety()<<std::endl;
+
+    
     point expectedRes=point({2,2});
     assert(almostEqual(res.getx(),expectedRes.getx(),0.001f));
     assert(almostEqual(res.gety(),expectedRes.gety(),0.001f));
@@ -201,6 +204,7 @@ try
     testgrad1();
     testgrad2();
     testgrad3();
+    testgrad4();
 }
 catch(const std::exception& e)
 {

@@ -4,7 +4,7 @@
 #include "calc.h"
 
 
-calc::point calc::getPosFromAngles(std::vector<calc::SensorValue>sensorData){
+calc::point calc::getPosFromAngles(std::vector<calc::SensorValue>sensorData, calc::point lastPoint){
     std::vector<calc::line>lines;
     //std::cout<<"maxindex: "<<maxindex;
     for (calc::SensorValue value :sensorData)
@@ -13,13 +13,13 @@ calc::point calc::getPosFromAngles(std::vector<calc::SensorValue>sensorData){
         float angle_rad=angle/180*M_PI;
         float xCord=value.xpos;
         std::cout<<" theta:"<<value.theta<<" sensor_out: "<<value.val<<" [angle: "<<sinf(angle_rad)<<"/"<<angle<<" pos: "<<xCord <<"] ";
-        std::cout<<"["<<sinf(angle_rad)<<"|"<<cosf(angle_rad)<<"]\n";
-        line l=line({xCord,0},{sinf(angle_rad),cosf(angle_rad)});
+        std::cout<<"["<<cosf(angle_rad)<<"|"<<sinf(angle_rad)<<"]\n";
+        line l=line({xCord,0},{cosf(angle_rad),sinf(angle_rad)});
         
         lines.push_back(l);
     }
     //todo: implement
-    point p=calc::gradientDescent(point({0.0,0.0}),lines);
+    point p=calc::gradientDescent(lastPoint,lines);
 
     std::cout<<"calculated pos ("<<p.getx()<<"|"<<p.gety()<<")"<<std::endl<<std::endl<<std::endl;
     return p;

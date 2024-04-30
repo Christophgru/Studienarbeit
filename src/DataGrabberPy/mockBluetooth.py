@@ -18,7 +18,7 @@ import websockets
 port= 12345
 clients = set()
 
-basetimesleep=0.1
+basetimesleep=0.02 #avg time will be 1.5x as much
 
 def getanchor1(val1_list,):
     val1 =math.sin(time.time())*10
@@ -35,8 +35,8 @@ def getanchor2(val2_list,):
 def on_close():
     exit()
 
-def getValues(theta2_offset=60
-              , theta3_offset=120
+def getValues(theta2_offset=80#+20
+              , theta3_offset=100#-20
               ):
     val1_list=[]
     val2_list=[]
@@ -154,9 +154,8 @@ def main():
     connection_thread = threading.Thread(target=accept_connections)
     connection_thread.start()
 
-    print("Webserver started, start Bluetooth read")
+    print("Webserver started, start Bluetooth simulation")
 
-    # Your Bluetooth read logic goes here
     last_value = [None, None]
     
     while True:

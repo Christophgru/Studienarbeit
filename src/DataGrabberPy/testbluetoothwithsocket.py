@@ -1,4 +1,6 @@
 
+import json
+import math
 import signal
 import sys
 import serial
@@ -17,6 +19,10 @@ clients = set()
 
 serialdata_anchor1 = None
 serialdata_anchor2 = None
+val1=0
+val2=0
+
+
 
 def init_serials():
     # baudrate = 115200, ready to send/ clear to send = 1, If a timeout is set it may return less characters as requested.
@@ -44,7 +50,7 @@ def init_serials():
 
 
 
-def getanchor1(val1_list,theta2_offset=0):
+def getanchor1(val1_list):
      if serialdata_anchor1.in_waiting > 0:  # check wether there are data on COM Port for anchor node 1
         dataStream_anchor1 = str(serialdata_anchor1.read(
             80))  # cast 80 bytes to string (approximated lenght of +UUDF event is 60 bytes, additionally there are empty lines between two events, 80 proved to be favourable)
@@ -54,12 +60,12 @@ def getanchor1(val1_list,theta2_offset=0):
             if "6C1DEBA0982F" in listing:  # check if the event data is corresponding to the correct anchor node
                 parts = listing.split(",")
                 if len(parts) == 9:  # check if the splitted event data is complete
-                    val1 =int(parts[2]) + theta2_offset  # fetches the azimut data (theta2) from the string and add the rotational offset value
+                    val1 =-int(parts[2])   # fetches the azimut data (theta2) from the string and add the rotational offset value
                     val1_list.append(val1)
                     # print(datetime.datetime.now())"""
         serialdata_anchor1.reset_input_buffer()  # alternative mehod flush() forces a data transfer from COM port of anchor node 1 and clears the serial data on this Port afterwards
      
-def getanchor2(val2_list,theta3_offset=0):
+def getanchor2(val2_list):
     if serialdata_anchor2.in_waiting > 0:
         dataStream_anchor2 = str(serialdata_anchor2.read(80))
         regex_anchor2 = re.split("UUDF:", dataStream_anchor2)
@@ -67,7 +73,7 @@ def getanchor2(val2_list,theta3_offset=0):
             if "6C1DEBA79E2D" in listing:
                 parts = listing.split(",")
                 if len(parts) == 9:
-                    val2=int(parts[2]) + theta3_offset
+                    val2=-int(parts[2])
                     val2_list.append(val2)
                     # print(datetime.datetime.now())"""
         serialdata_anchor2.reset_input_buffer()
@@ -78,35 +84,44 @@ def on_close():
     serialdata_anchor2.close()
     exit()
 
-def getValues(theta2_offset=0
-              , theta3_offset=0
+def getValues(theta2_offset=60
+              , theta3_offset=120
               ):
+    global val1
+    global val2
     val1_list=[]
     val2_list=[]#todo abstract for n antennas
 
-    thread1 = threading.Thread(target=getanchor1, args=(val1_list,theta2_offset,))
+    thread1 = threading.Thread(target=getanchor1, args=(val1_list,))
 
-    thread2 = threading.Thread(target=getanchor2, args=(val2_list,theta2_offset,))
+    thread2 = threading.Thread(target=getanchor2, args=(val2_list,))
     thread1.start() 
     thread2.start()
 
     thread1.join()
     thread2.join()
-
+    changed=False
     try:
     # Retrieve the result from the list
-        val1 = val1_list[0]
+        if val1_list[0]!=None:
+            val1 = val1_list[0]
+            changed=True
     except IndexError:
         # Set val1 to None if the index is out of range
-        val1 = None
+        print("Val1 skipped")
     try:
     # Retrieve the result from the list
-        val2 = val2_list[0]
+        if val2_list[0]!=None:
+            val2 = val2_list[0]
+            changed=True
     except IndexError:
         # Set val1 to None if the index is out of range
-        val2 = None
-    
-    return [val1,val2]
+        print("Val2 skipped")
+    print(val1,val2)
+    if changed:
+        return [{"theta":theta2_offset,"val":val1,"xpos":0},{"theta":theta3_offset,"val":val2,"xpos":3}]
+    else: 
+        return 0
 
 
 
@@ -215,15 +230,8 @@ def main():
     while True:
         try:
             temp = getValues()
-            changed = False
-            if temp[0] is not None:
-                last_value[0] = temp[0]
-                changed = True
-            if temp[1] is not None:
-                last_value[1] = temp[1]
-                changed = True
-            if changed:
-                message_final = "\t" + str(last_value) + "\t"
+            if temp!=0:
+                message_final = json.dumps(temp)
               #  print(message_final)
                 send_data_to_all_clients(message_final)
         except Exception as e:

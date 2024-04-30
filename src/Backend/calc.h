@@ -43,14 +43,14 @@ namespace calc {
      * @param abstand: Abstand zwischen den beiden sensoren
      * @param theta1: Unsicherheit des Azimuths von einer parallelen ausrichtung zum anderen Sensor
      * @param theta2: Unsicherheit des Azimuths von einer parallelen ausrichtung zum anderen Sensor*/
-    point getPosFromAngles(std::vector<calc::SensorValue>sensorData);
+    point getPosFromAngles(std::vector<calc::SensorValue>sensorData, calc::point lastPoint);
     //todo overload getPosFromAngles for more datasources
     float distance(point,line);
     float meanDistance(point p, std::vector<line> lines);
     float sqMeanDistance(point p,std::vector<line> lines);
     unsigned char floatToUnsignedCharInRange(float value);
     bool almostEqual(double a, double b, double epsilon = 1e-10);
-    point gradientDescent(point startingpoint, std::vector<line> lines, float gamma=0.5f,int steps=20,float delta=0.0001f);
+    point gradientDescent(point startingpoint, std::vector<line> lines, float gamma=0.5f,int steps=50,float delta=0.0001f);
 };
 
 
