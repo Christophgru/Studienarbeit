@@ -12,6 +12,7 @@ class SocketVerwaltung{
     sockaddr_in serverHint;
     char* buffer = new char[BUFSIZE];  // Adjust the size based on your message size
     int initSocket(std::string ip, int port);
+    WSADATA wsaData;
 public:
     SocketVerwaltung();
     int read(std::string* s);

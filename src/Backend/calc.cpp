@@ -18,6 +18,13 @@ calc::point calc::getPosFromAngles(std::vector<calc::SensorValue>sensorData, cal
         
         lines.push_back(l);
     }
+    if(std::isnan(lastPoint.getx())){
+        lastPoint.setx(0.0);
+    }
+    if(std::isnan(lastPoint.gety())){
+        lastPoint.sety(0.0);
+    }
+
     //todo: implement
     point p=calc::gradientDescent(lastPoint,lines);
 

@@ -50,7 +50,7 @@ namespace calc {
     float sqMeanDistance(point p,std::vector<line> lines);
     unsigned char floatToUnsignedCharInRange(float value);
     bool almostEqual(double a, double b, double epsilon = 1e-10);
-    point gradientDescent(point startingpoint, std::vector<line> lines, float gamma=0.5f,int steps=50,float delta=0.0001f);
+    point gradientDescent(point startingpoint, std::vector<line> lines, float gamma=0.5f,int steps=20,float delta=0.0001f);
 };
 
 

@@ -20,13 +20,17 @@ clients = set()
 
 basetimesleep=0.02 #avg time will be 1.5x as much
 
-def getanchor(val1_list,param1,param2):
+def getanchor(val1_list,id,param2):
     val=None
-    if param1==0:
+    if id==0:
         val =math.cos(time.time())*param2
-    if param1==1:
+    if id==1:
+        val =0.5*math.sin(time.time())*param2
+    if id==2:
         val =math.sin(time.time())*param2
-    print(val) 
+    if id==3:
+        val =math.cos(time.time())*param2
+    #print(val) 
     val1_list.append(val)
     time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
 
@@ -39,25 +43,25 @@ def on_close():
 def getValues(
               ):
     #should be passed
-    theta0_offset=70
-    theta1_offset=120
-    thetalist=[theta0_offset, theta1_offset]
-    xposlist=[0,3]
+    thetalist=[70,90,120,110]
+    xposlist=[0,1,3,2]
+    assert(len(thetalist)==len(xposlist))
+    numSensors=len(thetalist)
     vallist=[]
     threadlist=[]
     results=[]
     changed=False
-    for i in range(2):
+    for i in range(numSensors):
         vallist.append([])
         threadlist.append(None)
         results.append(None)
         threadlist[i] = threading.Thread(target=getanchor, args=(vallist[i],i,10))
         threadlist[i].start() 
 
-    for i in range(2):
+    for i in range(numSensors):
         threadlist[i].join()
 
-    for i in range(2):
+    for i in range(numSensors):
         try:
         # Retrieve the result from the list
             results[i] = vallist[i][0]
@@ -66,9 +70,9 @@ def getValues(
             # Set val1 to None if the index is out of range
             results[i] = None
             
-    for i in range(2):
+    for i in range(numSensors):
         results[i]={"theta":thetalist[i],"val":results[i],"xpos":xposlist[i]}
-
+    #print(results)
     if changed:
         return results
     else:

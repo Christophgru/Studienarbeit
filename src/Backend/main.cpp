@@ -21,6 +21,11 @@ int main(int argc, char** argv){
         int red=s.read(&string);
         if(0<red){
             std::vector<calc::SensorValue> angles=getangles(string);
+            std::cout<<std::endl;
+            for(calc::SensorValue s : angles){  
+                std::cout<<"xpos: " <<s.xpos<<" theta: "<<s.theta<<" val: "<<s.val<<"; ";
+            }
+            std::cout<<std::endl;
             lastValue=calc::getPosFromAngles(angles,lastValue);
             //Kalmann filter
             d->projectPos(angles, lastValue);

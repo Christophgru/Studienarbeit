@@ -12,16 +12,9 @@
 
 SocketVerwaltung::SocketVerwaltung(){
     
-   WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        std::cerr << "Failed to initialize Winsock\n";
-        return ;
-    }
     
     
     
-    
-
     //for all sockets init
     initSocket("127.0.0.1", 12345);
     // Close the client socket
@@ -29,8 +22,12 @@ SocketVerwaltung::SocketVerwaltung(){
 }
 
 int SocketVerwaltung::initSocket(std::string ip, int port){
-    // Create a client socket
     
+    // Create a client socket
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        std::cerr << "Failed to initialize Winsock\n";
+        return 1;
+    }
     SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket == INVALID_SOCKET) {
         std::cerr << "Error creating client socket\n";
@@ -66,7 +63,7 @@ int SocketVerwaltung::initSocket(std::string ip, int port){
 }
 
 /*returns numbers of bytes read*/
-    int SocketVerwaltung::read(std::string* s){
+int SocketVerwaltung::read(std::string* s){
         
         
         for (SOCKET clientSocket : clientSockets) {
@@ -82,7 +79,7 @@ int SocketVerwaltung::initSocket(std::string ip, int port){
                 std::cout<<".";
                 //std::cout<<" "<<bytesRead<<" Bytes read";
                 if(bytesRead>BUFSIZE){
-                    printf("\ndouble frame received, throwing away\n");//or maybe only send first half?
+                    printf("\n huge frame received, throwing away\n");//or maybe only send first half?
                     s->assign("");
                     memset(buffer, 0, BUFSIZE);
                 }else
@@ -102,13 +99,14 @@ int SocketVerwaltung::initSocket(std::string ip, int port){
                     
             }
         }
-
+        //on connection lost
         if(clientSockets.size()==0){
             printf("Connection lost\n");
             //try reinit for all, if one succeeds cintinue, else kill programm
             int status=initSocket("127.0.0.1", 12345);
             if(status==1){
                 printf("Fatal Error, Server Connection lost. shutting down");
+                //return 0;
                 return -1;
                 }
             else if(status==0){
