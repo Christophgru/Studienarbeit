@@ -8,7 +8,7 @@ Pixel green = {0, 255, 0};
 Pixel red = {255, 0, 0};
 Pixel black = {0, 0, 0};
 
-Pixel interpolateColor(Pixel startColor, Pixel endColor, float t) {
+Pixel interpolateColor(Pixel startColor, Pixel endColor, double t) {
     Pixel result;
     result.r = startColor.r + static_cast<unsigned char>((endColor.r - startColor.r) * t);
     result.g = startColor.g + static_cast<unsigned char>((endColor.g - startColor.g) * t);
@@ -29,8 +29,8 @@ double map(double x, double in_min, double in_max, double out_min, double out_ma
 
 
 
-Pixel getColorFromValue(float value, int maxValue){
-    float mapped=map(value, 0,maxValue,0,5);
+Pixel getColorFromValue(double value, int maxValue){
+    double mapped=map(value, 0,maxValue,0,5);
     Pixel color;
     //std::cout<<"val: "<<value<<" mapped: "<<mapped<<std::endl;
     if (mapped <= 1.0f) {
@@ -49,7 +49,7 @@ Pixel getColorFromValue(float value, int maxValue){
 
 using namespace calc;
 
-void paintpicture(std::vector<line> lines, int WIDTH, int HEIGHT, float zoomfactor, int maxDistColorGrad){
+void paintpicture(std::vector<line> lines, int WIDTH, int HEIGHT, double zoomfactor, int maxDistColorGrad){
 
 
     try {
@@ -60,15 +60,15 @@ void paintpicture(std::vector<line> lines, int WIDTH, int HEIGHT, float zoomfact
         Pixel* image = new Pixel[WIDTH * HEIGHT];
         //todo find max by first checking for the corners, then map colors on range [0,max]
         //todo fix ugly interpolation
-        float maxVal=0;
+        double maxVal=0;
         Pixel lastColor={0,0,0};
         // Set the value of each pixel
-        for (int y = 0; y < HEIGHT; ++y) {
-            for (int x = 0; x < WIDTH; ++x) {
-                float coordx=static_cast<float>(x)/zoomfactor;
-                float coordy=static_cast<float>(y)/zoomfactor;
+        for (int x = 0; x < WIDTH; ++x) {
+            for (int y = 0; y < HEIGHT; ++y) {
+                double coordx=static_cast<double>(x)/zoomfactor;
+                double coordy=static_cast<double>(y)/zoomfactor;
                 point p=point({coordx,coordy});
-                float value=sqMeanDistance(p,lines);
+                double value=sqMeanDistance(p,lines);
                 if(value>maxVal)maxVal=value;
                 // Determine the color based on the value
                 Pixel color;

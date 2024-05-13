@@ -43,8 +43,8 @@ def on_close():
 def getValues(
               ):
     #should be passed
-    thetalist=[70,90,120,110]
-    xposlist=[0,1,3,2]
+    thetalist=[70,110,80,100]
+    xposlist=[0,3,1,2]
     assert(len(thetalist)==len(xposlist))
     numSensors=len(thetalist)
     vallist=[]

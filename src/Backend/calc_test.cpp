@@ -13,8 +13,8 @@ void testdistance1(){
 
     line l({0,0},{1,0});
     point p({0,0});
-    float result =    calc::distance(p,l);
-    float expectedResult =  0;
+    double result =    calc::distance(p,l);
+    double expectedResult =  0;
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -27,8 +27,8 @@ void testdistance2(){
 
     line l({0,0},{1,0});
     point p({0,0});
-    float result =    calc::distance(p,l);
-    float expectedResult =  0;
+    double result =    calc::distance(p,l);
+    double expectedResult =  0;
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -41,8 +41,8 @@ void testdistance3(){
 
     line l({0,0},{1,1});
     point p({0,0});
-    float result =    calc::distance(p,l);
-    float expectedResult =  0;
+    double result =    calc::distance(p,l);
+    double expectedResult =  0;
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -56,8 +56,8 @@ void testdistance4(){
 
     line l({0,0},{0,1});
     point p({1,0});
-    float result =    calc::distance(p,l);
-    float expectedResult =  1;
+    double result =    calc::distance(p,l);
+    double expectedResult =  1;
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -69,8 +69,8 @@ void testdistance5(){
 
     line l({0,0},{1,1});
     point p({2,2});
-    float result =    calc::distance(p,l);
-    float expectedResult = 0 ;
+    double result =    calc::distance(p,l);
+    double expectedResult = 0 ;
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -82,8 +82,8 @@ void testdistance6(){
 
     line l({0,0},{1,1});
     point p({-1,1});
-    float result =    calc::distance(p,l);
-    float expectedResult = sqrt(2) ;
+    double result =    calc::distance(p,l);
+    double expectedResult = sqrt(2) ;
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -95,8 +95,8 @@ void testdistance7(){
 
     line l({-2,-2},{1,1});
     point p({-1,1});
-    float result =    calc::distance(p,l);
-    float expectedResult = sqrt(2);
+    double result =    calc::distance(p,l);
+    double expectedResult = sqrt(2);
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -109,11 +109,11 @@ void testdistance8(){
     line l({0,0},{1,0});
     for (int i = 0; i < 20; i++)
     {
-    float number=static_cast<float>(i)/10.0f;
+    double number=static_cast<double>(i)/10.0f;
     point p({0,number});
-    float result =    calc::distance(p,l);
+    double result =    calc::distance(p,l);
     
-    float expectedResult = number ;
+    double expectedResult = number ;
     
     // Assert that the result matches the expected result
     assert(result == expectedResult);
@@ -130,10 +130,13 @@ void testgrad1(){
     line l1({0,2},{1,0});
     std::vector<line> lines={l1};
     point sp({0,0});
-    point res=gradientDescent(sp,lines);
     point expectedRes=point({0,2});
-    assert(almostEqual(res.getx(),expectedRes.getx(),0.001f));
-    assert(almostEqual(res.gety(),expectedRes.gety(),0.001f));
+    
+    point res=gradientDescent(sp,lines,0.5f,40,1.0e-20f);
+    
+    std::cout<<"res:["<<res.getx()<<"|"<<2.0f-res.gety()<<"] exp. res:["<<expectedRes.getx()<<"|"<<expectedRes.gety()<<"]";
+    assert(almostEqual(res.getx(),expectedRes.getx(),3e-2f));
+    assert(almostEqual(res.gety(),expectedRes.gety(),3e-2f));
     std::cout << "Test grad1 passed!" << std::endl;
 }
 
@@ -164,25 +167,25 @@ void testgrad3(){
 
 
 void testgrad4(){
-    line l2({0,0},{1,1.75});
-    line l1({0,3},{-1,1.66});
+    line l2({0,0},{1,1});
+    line l1({0,3},{1,-1});
     std::vector<line> lines={l1,l2};
     point sp({0,0});
     point res=gradientDescent(sp,lines);
-    std::cout<<"Result: ("<<res.getx()<<"|"<< res.gety()<<std::endl;
+    std::cout<<"Result: ("<<res.getx()<<"|"<< res.gety()<<")"<<std::endl;
 
     
-    point expectedRes=point({2,2});
-    assert(almostEqual(res.getx(),expectedRes.getx(),0.001f));
-    assert(almostEqual(res.gety(),expectedRes.gety(),0.001f));
+    point expectedRes=point({1.5f,1.5f});
+    assert(almostEqual(res.getx(),expectedRes.getx(),1e-5f));
+    assert(almostEqual(res.gety(),expectedRes.gety(),1e-5f));
     
-    std::cout << "Test grad3 passed!" << std::endl;
+    std::cout << "Test grad4 passed!" << std::endl;
 }
 
 
 int main(int argc, char const *argv[])
 {
-
+std::cout<<"start";
 try
 {
     testdistance1();

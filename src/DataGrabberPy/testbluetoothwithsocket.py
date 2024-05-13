@@ -68,6 +68,7 @@ def getanchor1(val1_list):
 def getanchor2(val2_list):
     if serialdata_anchor2.in_waiting > 0:
         dataStream_anchor2 = str(serialdata_anchor2.read(80))
+        #print(dataStream_anchor2)
         regex_anchor2 = re.split("UUDF:", dataStream_anchor2)
         for listing in regex_anchor2:
             if "6C1DEBA79E2D" in listing:

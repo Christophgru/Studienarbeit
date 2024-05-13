@@ -14,26 +14,26 @@ namespace calc {
     
 /** Datenklasse für Ergebnis der Punktberechnungs methode*/
     struct point{
-        std::vector<float>position;
-        float Unsicherheit;
-        point(std::vector<float> f, float Unsicherheit=0);
-        void setx(float x);
-        float getx();
-        void sety(float y);
-        float gety();
+        std::vector<double>position;
+        double Unsicherheit;
+        point(std::vector<double> f, double Unsicherheit=0);
+        void setx(double x);
+        double getx();
+        void sety(double y);
+        double gety();
     };
     struct line{
-        std::vector<float>start;
-        std::vector<float>direction;
-        line(std::vector<float> start, std::vector<float> direction);
-        
+        std::vector<double>start;
+        std::vector<double>direction;
+        line(std::vector<double> start, std::vector<double> direction);
+        std::vector<double>getPointOnLine();
     };
 
 
     struct SensorValue {
-    float theta;
-    float val;
-    float xpos;
+    double theta;
+    double val;
+    double xpos;
     };
 
 
@@ -45,12 +45,18 @@ namespace calc {
      * @param theta2: Unsicherheit des Azimuths von einer parallelen ausrichtung zum anderen Sensor*/
     point getPosFromAngles(std::vector<calc::SensorValue>sensorData, calc::point lastPoint);
     //todo overload getPosFromAngles for more datasources
-    float distance(point,line);
-    float meanDistance(point p, std::vector<line> lines);
-    float sqMeanDistance(point p,std::vector<line> lines);
-    unsigned char floatToUnsignedCharInRange(float value);
+    double distance(point,line);
+    double meanDistance(point p, std::vector<line> lines);
+    double sqMeanDistance(point p,std::vector<line> lines);
+    unsigned char doubleToUnsignedCharInRange(double value);
     bool almostEqual(double a, double b, double epsilon = 1e-10);
-    point gradientDescent(point startingpoint, std::vector<line> lines, float gamma=0.5f,int steps=20,float delta=0.0001f);
+    point gradientDescent(point startingpoint, std::vector<line> lines, double gamma=0.5,int steps=20,double delta=1e-10);
+
+    double dotProduct(const std::vector<double>& v1, const std::vector<double>& v2);
+    std::vector<double> vectorSubtract(const std::vector<double>& v1, const std::vector<double>& v2);
+    std::vector<double> scalarMultiply(const std::vector<double>& v, double scalar);
+    double vectorNorm(const std::vector<double>& v);
+
 };
 
 
