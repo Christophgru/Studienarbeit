@@ -18,6 +18,7 @@
 #include "display.h"
 #include <vector>
 #include "stringparser.h"
+#include "kalman.h"
 
 /**
  * @brief Main function for the application.
@@ -32,6 +33,7 @@
 int main(int argc, char** argv) {
     display* d = new display();
     SocketVerwaltung s = SocketVerwaltung();
+    KalmanFilter kalman=KalmanFilter();
     calc::point lastValue = calc::point({0.0, 0.0});
 
     while (true) {
@@ -45,7 +47,7 @@ int main(int argc, char** argv) {
             }
             if(DEBUGLEVEL) std::cout << std::endl;
             lastValue = calc::getPosFromAngles(angles, lastValue);
-            // Kalman filter
+            lastValue=kalman.filter(lastValue);
             d->projectPos(angles, lastValue);
         } else if (red != 0) {
             printf("error");

@@ -11,7 +11,7 @@ Make sure to have importet the external NLohammParser into external\JSON that we
 `git submodule update --init --recursive`
 
 ### Display
-Use Py3.12 for the file src\DataRetrievalAndUi\ui.py to display the calculated Data.
+Use Py 3.12 for the file src\DataRetrievalAndUi\ui.py to display the calculated Data.
 
 
 ### Authors
