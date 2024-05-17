@@ -11,3 +11,4 @@
 /.clang-format
 /src/new/__pycache__/
 /src/old/.idea/
+/externals/
