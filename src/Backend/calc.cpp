@@ -1,52 +1,79 @@
-//
-// Created by chris on 19.10.2023.
-//
+/**
+ * @file calc.cpp
+ * @brief Implementation file for the calc library.
+ * 
+ * This file contains the implementation of various functions for distance measurement,
+ * gradient descent, and vector operations.
+ * 
+ * @author Christoph Gruender
+ * @date 2024-05-17
+ */
+
 #include "calc.h"
 #include <cassert>
 
+namespace calc {
 
-calc::point calc::getPosFromAngles(std::vector<calc::SensorValue>sensorData, calc::point lastPoint){
-    std::vector<calc::line>lines;
-    //std::cout<<"maxindex: "<<maxindex;
-    for (calc::SensorValue value :sensorData)
-    {
-        double angle=value.theta+value.val;
-        double angle_rad=angle/180*M_PI;
-        double xCord=value.xpos;
-        std::cout<<" theta:"<<value.theta<<" sensor_out: "<<value.val<<" [angle: "<<sinf(angle_rad)<<"/"<<angle<<" pos: "<<xCord <<"] ";
-        std::cout<<"["<<cosf(angle_rad)<<"|"<<sinf(angle_rad)<<"]\n";
-        line l=line({xCord,0},{cosf(angle_rad),sinf(angle_rad)});
-        
+/**
+ * @brief Calculates the position from sensor angles.
+ * @param sensorData Vector of sensor values.
+ * @param lastPoint The last calculated point.
+ * @return The calculated point.
+ */
+point getPosFromAngles(std::vector<SensorValue> sensorData, point lastPoint) {
+    std::vector<line> lines;
+    for (SensorValue value : sensorData) {
+        double angle = value.theta + value.val;
+        double angle_rad = angle / 180 * M_PI;
+        double xCord = value.xpos;
+        if(DEBUGLEVEL) std::cout << " theta:" << value.theta << " sensor_out: " << value.val << " [angle: " << sinf(angle_rad) << "/" << angle << " pos: " << xCord << "] ";
+        if(DEBUGLEVEL) std::cout << "[" << cosf(angle_rad) << "|" << sinf(angle_rad) << "]\n";
+        line l = line({xCord, 0}, {cosf(angle_rad), sinf(angle_rad)});
         lines.push_back(l);
     }
-    if(std::isnan(lastPoint.getx())){
+    if (std::isnan(lastPoint.getx())) {
         lastPoint.setx(0.0);
     }
-    if(std::isnan(lastPoint.gety())){
+    if (std::isnan(lastPoint.gety())) {
         lastPoint.sety(0.0);
     }
 
-    //todo: implement
-    point p=calc::gradientDescent(lastPoint,lines);
+    point p = gradientDescent(lastPoint, lines);
 
-    std::cout<<"calculated pos ("<<p.getx()<<"|"<<p.gety()<<")"<<std::endl<<std::endl<<std::endl;
+    if(DEBUGLEVEL) std::cout << "calculated pos (" << p.getx() << "|" << p.gety() << ")" << std::endl << std::endl << std::endl;
     return p;
-
 }
-bool calc::almostEqual(double a, double b, double epsilon) {
+
+/**
+ * @brief Checks if two doubles are almost equal.
+ * @param a First double.
+ * @param b Second double.
+ * @param epsilon Tolerance for comparison.
+ * @return True if the doubles are almost equal, false otherwise.
+ */
+bool almostEqual(double a, double b, double epsilon) {
     return std::fabs(a - b) < epsilon;
 }
 
-std::vector<double> calc::line::getPointOnLine(){
-    std::vector<double>result(this->start.size());;
-    for (int i = 0; i < this->start.size(); i++)
-    {
-        result[i]=this->start[i]+this->direction[i];
+/**
+ * @brief Gets a point on the line.
+ * @return A point on the line.
+ */
+std::vector<double> line::getPointOnLine() {
+    std::vector<double> result(this->start.size());
+    for (int i = 0; i < this->start.size(); i++) {
+        result[i] = this->start[i] + this->direction[i];
     }
     return result;
-    }
+}
 
-double calc::dotProduct(const std::vector<double>& v1, const std::vector<double>& v2) {
+/**
+ * @brief Calculates the dot product of two vectors.
+ * @param v1 First vector.
+ * @param v2 Second vector.
+ * @return The dot product.
+ */
+double dotProduct(const std::vector<double>& v1, const std::vector<double>& v2) {
     double sum = 0.0;
     for (int i = 0; i < v1.size(); ++i) {
         sum += v1[i] * v2[i];
@@ -54,7 +81,13 @@ double calc::dotProduct(const std::vector<double>& v1, const std::vector<double>
     return sum;
 }
 
-std::vector<double> calc::vectorSubtract(const std::vector<double>& v1, const std::vector<double>& v2) {
+/**
+ * @brief Subtracts one vector from another.
+ * @param v1 First vector.
+ * @param v2 Second vector.
+ * @return The result of the subtraction.
+ */
+std::vector<double> vectorSubtract(const std::vector<double>& v1, const std::vector<double>& v2) {
     std::vector<double> result(v1.size());
     for (int i = 0; i < v1.size(); ++i) {
         result[i] = v1[i] - v2[i];
@@ -62,7 +95,13 @@ std::vector<double> calc::vectorSubtract(const std::vector<double>& v1, const st
     return result;
 }
 
-std::vector<double> calc::scalarMultiply(const std::vector<double>& v, double scalar) {
+/**
+ * @brief Multiplies a vector by a scalar.
+ * @param v Vector.
+ * @param scalar Scalar value.
+ * @return The result of the multiplication.
+ */
+std::vector<double> scalarMultiply(const std::vector<double>& v, double scalar) {
     std::vector<double> result(v.size());
     for (int i = 0; i < v.size(); ++i) {
         result[i] = v[i] * scalar;
@@ -70,14 +109,25 @@ std::vector<double> calc::scalarMultiply(const std::vector<double>& v, double sc
     return result;
 }
 
-double calc::vectorNorm(const std::vector<double>& v) {
-    return std::sqrt(calc::dotProduct(v, v));
+/**
+ * @brief Calculates the norm of a vector.
+ * @param v Vector.
+ * @return The norm of the vector.
+ */
+double vectorNorm(const std::vector<double>& v) {
+    return std::sqrt(dotProduct(v, v));
 }
 
-double calc::distance(point pnt,line l) {
-    std::vector<double> A=l.start;
-    std::vector<double> B=l.getPointOnLine();
-    std::vector<double> P=pnt.position;
+/**
+ * @brief Calculates the distance between a point and a line.
+ * @param pnt Point.
+ * @param l Line.
+ * @return The distance between the point and the line.
+ */
+double distance(point pnt, line l) {
+    std::vector<double> A = l.start;
+    std::vector<double> B = l.getPointOnLine();
+    std::vector<double> P = pnt.position;
 
     std::vector<double> AP = vectorSubtract(P, A);
     std::vector<double> AB = vectorSubtract(B, A);
@@ -88,50 +138,92 @@ double calc::distance(point pnt,line l) {
     return vectorNorm(d);
 }
 
-
-double calc::meanDistance(point p, std::vector<line> lines){
-    double dist=0.0;
-    for (line l:lines){
-        dist+=calc::distance(p,l);
+/**
+ * @brief Calculates the mean distance between a point and a set of lines.
+ * @param p Point.
+ * @param lines Vector of lines.
+ * @return The mean distance.
+ */
+double meanDistance(point p, std::vector<line> lines) {
+    double dist = 0.0;
+    for (line l : lines) {
+        dist += distance(p, l);
     }
-    return dist/static_cast<double>(lines.size());
+    return dist / static_cast<double>(lines.size());
 }
-double calc::sqMeanDistance(point p, std::vector<line> lines){
-    double dist=0.0;
-    for (line l:lines){
-        dist+=pow(calc::distance(p,l),2.0);
+
+/**
+ * @brief Calculates the squared mean distance between a point and a set of lines.
+ * @param p Point.
+ * @param lines Vector of lines.
+ * @return The squared mean distance.
+ */
+double sqMeanDistance(point p, std::vector<line> lines) {
+    double dist = 0.0;
+    for (line l : lines) {
+        dist += pow(distance(p, l), 2.0);
     }
-    return dist/static_cast<double>(lines.size());
+    return dist / static_cast<double>(lines.size());
 }
 
-calc::line::line(std::vector<double> start, std::vector<double> direction){//ay+bx+c=0
-    this->direction=direction;
-    this->start=start;
-
+/**
+ * @brief Constructor for line.
+ * @param start Start point of the line.
+ * @param direction Direction vector of the line.
+ */
+line::line(std::vector<double> start, std::vector<double> direction) {
+    this->direction = direction;
+    this->start = start;
 }
 
-calc::point::point(std::vector<double> f, double Unsicherheit){
-    position=f;
-    this->Unsicherheit=Unsicherheit;
+/**
+ * @brief Constructor for point.
+ * @param f Position of the point.
+ * @param Uncertainty Uncertainty of the point's position.
+ */
+point::point(std::vector<double> f, double Uncertainty) {
+    position = f;
+    this->Uncertainty = Uncertainty;
 }
-double calc::point::getx(){
+
+/**
+ * @brief Gets the x-coordinate of the point.
+ * @return The x-coordinate.
+ */
+double point::getx() {
     return this->position[0];
 }
-void calc::point::setx(double x){
-    this->position[0]=x;
+
+/**
+ * @brief Sets the x-coordinate of the point.
+ * @param x The x-coordinate.
+ */
+void point::setx(double x) {
+    this->position[0] = x;
 }
-double calc::point::gety(){
+
+/**
+ * @brief Gets the y-coordinate of the point.
+ * @return The y-coordinate.
+ */
+double point::gety() {
     return this->position[1];
 }
-void calc::point::sety(double y){
-    this->position[1]=y;
+
+/**
+ * @brief Sets the y-coordinate of the point.
+ * @param y The y-coordinate.
+ */
+void point::sety(double y) {
+    this->position[1] = y;
 }
 
-
-
-
-unsigned char calc::doubleToUnsignedCharInRange(double value) {
-    // Ensure value is within the range [0, 255]
+/**
+ * @brief Converts a double to an unsigned char within the range [0, 255].
+ * @param value The double value.
+ * @return The converted unsigned char.
+ */
+unsigned char doubleToUnsignedCharInRange(double value) {
     if (value < 0.0) {
         return 0;
     } else if (value > 255.0) {
@@ -141,18 +233,27 @@ unsigned char calc::doubleToUnsignedCharInRange(double value) {
     }
 }
 
-//Gradient descent: Q: Is dist to Lines convex?
-
-
-
-calc::point calc::gradientDescent(calc::point startingPoint, std::vector<calc::line> lines,double gamma, int steps, double delta){
-    if(steps==0||std::isnan(startingPoint.getx())||std::isnan(startingPoint.gety()))return startingPoint;
-    double dist=sqMeanDistance(startingPoint,lines);
-    double deltaDistX=dist-sqMeanDistance(point({startingPoint.getx()+delta,startingPoint.gety()}),lines);
-    double incX=deltaDistX/delta;
-    double deltaDistY=dist-sqMeanDistance(point({startingPoint.getx(),startingPoint.gety()+delta}),lines);
-    double incY=deltaDistY/delta;
-    startingPoint.setx(startingPoint.getx()+gamma*incX);
-    startingPoint.sety(startingPoint.gety()+gamma*incY);
-    return gradientDescent(startingPoint,lines,gamma,steps-1);
+/**
+ * @brief Performs gradient descent to find the point with the minimum distance to a set of lines.
+ * @param startingPoint The starting point for gradient descent.
+ * @param lines Vector of lines.
+ * @param gamma Learning rate.
+ * @param steps Number of steps.
+ * @param delta Small increment for numerical differentiation.
+ * @return The point with the minimum distance to the lines.
+ */
+point gradientDescent(point startingPoint, std::vector<line> lines, double gamma, int steps, double delta) {
+    if (steps == 0 || std::isnan(startingPoint.getx()) || std::isnan(startingPoint.gety())) {
+        return startingPoint;
+    }
+    double dist = sqMeanDistance(startingPoint, lines);
+    double deltaDistX = dist - sqMeanDistance(point({startingPoint.getx() + delta, startingPoint.gety()}), lines);
+    double incX = deltaDistX / delta;
+    double deltaDistY = dist - sqMeanDistance(point({startingPoint.getx(), startingPoint.gety() + delta}), lines);
+    double incY = deltaDistY / delta;
+    startingPoint.setx(startingPoint.getx() + gamma * incX);
+    startingPoint.sety(startingPoint.gety() + gamma * incY);
+    return gradientDescent(startingPoint, lines, gamma, steps - 1);
 }
+
+} // namespace calc

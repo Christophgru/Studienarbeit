@@ -25,6 +25,10 @@ val2=0
 
 
 def init_serials():
+    """
+    @brief Initialize the serial connections for anchor nodes.
+    @details Sets up serial connections for two anchor nodes with specific configurations.
+    """
     # baudrate = 115200, ready to send/ clear to send = 1, If a timeout is set it may return less characters as requested.
     # With no timeout it will block until the requested number of bytes is read.
     global serialdata_anchor1
@@ -51,6 +55,10 @@ def init_serials():
 
 
 def getanchor1(val1_list):
+     """
+    @brief Retrieve data from the first anchor node.
+    @param val1_list List to store the azimuth data from the first anchor node.
+     """
      if serialdata_anchor1.in_waiting > 0:  # check wether there are data on COM Port for anchor node 1
         dataStream_anchor1 = str(serialdata_anchor1.read(
             80))  # cast 80 bytes to string (approximated lenght of +UUDF event is 60 bytes, additionally there are empty lines between two events, 80 proved to be favourable)
@@ -66,6 +74,10 @@ def getanchor1(val1_list):
         serialdata_anchor1.reset_input_buffer()  # alternative mehod flush() forces a data transfer from COM port of anchor node 1 and clears the serial data on this Port afterwards
      
 def getanchor2(val2_list):
+    """
+    @brief Retrieve data from the second anchor node.
+    @param val2_list List to store the azimuth data from the second anchor node.
+"""
     if serialdata_anchor2.in_waiting > 0:
         dataStream_anchor2 = str(serialdata_anchor2.read(80))
         #print(dataStream_anchor2)
@@ -81,6 +93,9 @@ def getanchor2(val2_list):
         # averaging the azimut information of anchor node 1 and anchor node 2 about the last four records
 
 def on_close():
+    """
+    @brief Close the serial connections and exit the program.
+    """
     serialdata_anchor1.close()
     serialdata_anchor2.close()
     exit()
@@ -88,6 +103,12 @@ def on_close():
 def getValues(theta2_offset=60
               , theta3_offset=120
               ):
+    """
+    @brief Retrieve and process values from the anchor nodes.
+    @param theta2_offset Azimuth offset for the first anchor node.
+    @param theta3_offset Azimuth offset for the second anchor node.
+    @return A list of dictionaries with processed values or 0 if no change.
+"""
     global val1
     global val2
     val1_list=[]
@@ -125,24 +146,15 @@ def getValues(theta2_offset=60
         return 0
 
 
-
-
-
-
-
-
-
-
-
-    
-
 server_running = True
 server_socket = None
 client_sockets = []
 
 def handle_client(client_socket, client_address):
     """
-    Function to handle incoming client connections.
+     @brief Handle incoming client connections.
+    @param client_socket The socket object for the connected client.
+    @param client_address The address of the connected client.
     """
     print(f"Connection from {client_address}")
     while server_running:
@@ -161,7 +173,8 @@ def handle_client(client_socket, client_address):
 
 def send_data_to_all_clients(data):
     """
-    Function to send data to all connected clients.
+    @brief Send data to all connected clients.
+    @param data The data to be sent to all clients.
     """
     print(f"send data to {len(client_sockets) } clients")
     for client_socket in client_sockets:
@@ -172,7 +185,9 @@ def send_data_to_all_clients(data):
 
 def signal_handler(sig, frame):
     """
-    Signal handler for keyboard interrupt.
+    @brief Signal handler for keyboard interrupt.
+    @param sig The signal number.
+    @param frame The current stack frame.
     """
     global server_running, server_socket
     print("Stopping server...")
@@ -188,7 +203,7 @@ def signal_handler(sig, frame):
 
 def accept_connections():
     """
-    Function to accept incoming connections in a separate thread.
+    @brief Accept incoming connections in a separate thread.
     """
     global server_socket
     try:
@@ -206,7 +221,7 @@ def accept_connections():
 
 def main():
     """
-    Main function to start the server and manage Bluetooth read.
+    @brief Main function to start the server and manage Bluetooth read.
     """
     # Register signal handler for keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)

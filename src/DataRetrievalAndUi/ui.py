@@ -1,3 +1,10 @@
+"""
+@file ui.py
+@brief Mock UI module for displaying coordinates and sensor data
+@date 2024-05-17
+@author Christoph Gruender
+"""
+
 import json
 import math
 import socket
@@ -12,14 +19,19 @@ import asyncio
 
 
 
+displaydebuginfo=0
+HOST = '127.0.0.1'  # localhost
+PORT = 12346
+
 
 
 def server_thread():
+    """
+    @brief Server thread function to handle incoming connections and data.
+    """
     firstcall=True
     while True:
         try:
-            HOST = '127.0.0.1'  # localhost
-            PORT = 12346
 
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.bind((HOST, PORT))
@@ -36,13 +48,19 @@ def server_thread():
                                 break
                             
                             msg = data.decode()
-                            print("Received:", msg)
+                            if displaydebuginfo:
+                                print("Received:", msg)
                             update_display(msg, firstcall)
                             firstcall=False
         except Exception as e:
              print(f"Exception occurred: {e}. Restarting server...")
 
 def update_display(msg, firstcall):
+    """
+    @brief Update the display with the received message.
+    @param msg The received message in JSON format.
+    @param firstcall A flag indicating if it's the first call to this function.
+    """
     try:
         # Parse the JSON message
         data = json.loads(msg)
@@ -53,7 +71,7 @@ def update_display(msg, firstcall):
         # Check if xpos and ypos are not None
         if xpos is not None and ypos is not None:
             # Update the GUI with the received coordinates
-            label.config(text=f"Xpos: {xpos}    Ypos: {ypos}    Unsicherheit: {data.get('point', {}).get('Unsicherheit', 'N/A')}")
+            label.config(text=f"Xpos: {xpos}    Ypos: {ypos}    Uncertainty: {data.get('point', {}).get('Uncertainty', 'N/A')}")
             update_point_on_canvas(xpos, ypos)
 
             # Extract sensor values
@@ -68,6 +86,11 @@ def update_display(msg, firstcall):
         print("Invalid JSON format:", msg)
 
 def update_point_on_canvas(xpos, ypos):
+    """
+    @brief Update the point on the canvas based on received coordinates.
+    @param xpos X-coordinate of the point.
+    @param ypos Y-coordinate of the point.
+    """
     # Clear existing points
     canvas.delete("point")
 
@@ -80,6 +103,11 @@ def update_point_on_canvas(xpos, ypos):
     canvas.create_oval(canvas_x - POINT_SIZE, canvas_y - POINT_SIZE, canvas_x + POINT_SIZE, canvas_y + POINT_SIZE, fill="red", tags="point")
 
 def visualize_sensors(sensor_values, firstcall):
+    """
+    @brief Visualize sensor data on the canvas.
+    @param sensor_values List of sensor data values.
+    @param firstcall A flag indicating if it's the first call to this function.
+    """
     # Clear existing sensor visualizations
     canvas.delete("sensordata")
 
@@ -124,7 +152,9 @@ def visualize_sensors(sensor_values, firstcall):
 
 
 def draw_axes():
-    
+    """
+    @brief Draw the coordinate axes on the canvas.
+    """
 
     # Draw x-axis
     canvas.create_line(0, baseY, CANVAS_WIDTH, baseY, fill="black")
@@ -149,12 +179,17 @@ def draw_axes():
 
 
 def main_thread():
+    """
+    @brief Main thread function for periodic print.
+    """
     while True:
         print(".", end="", flush=True)
         time.sleep(1)
 
 def main_async():
-    # Run the Tkinter event loop
+    """
+    @brief Main function to run the Tkinter event loop asynchronously.
+    """
     root.mainloop()
 
 if __name__ == "__main__":

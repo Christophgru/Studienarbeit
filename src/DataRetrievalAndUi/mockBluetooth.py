@@ -1,4 +1,9 @@
-
+"""
+@file mockBluetooth.py
+@brief Mock Bluetooth module for testing purposes
+@date 2024-05-17
+@author Christoph Gruender
+"""
 import json
 import math
 import random
@@ -18,9 +23,15 @@ import websockets
 port= 12345
 clients = set()
 
-basetimesleep=0.02 #avg time will be 1.5x as much
+basetimesleep=0.05 #avg time will be 1.5x as much
 
 def getanchor(val1_list,id,param2):
+    """
+    @brief Simulate data retrieval from an anchor node.
+    @param val1_list List to store the simulated data.
+    @param id Identifier for the anchor node.
+    @param param2 Parameter for data simulation.
+    """
     val=None
     if id==0:
         val =math.cos(time.time())*param2
@@ -38,11 +49,17 @@ def getanchor(val1_list,id,param2):
 
    
 def on_close():
+    """
+    @brief Close the program.
+    """
     exit()
 
 def getValues(
               ):
-    #should be passed
+    """
+    @brief Retrieve and process simulated values from anchor nodes.
+    @return A list of dictionaries with processed values or 0 if no change.
+    """
     thetalist=[70,110,80,100]
     xposlist=[0,3,1,2]
     assert(len(thetalist)==len(xposlist))
@@ -87,7 +104,9 @@ client_sockets = []
 
 def handle_client(client_socket, client_address):
     """
-    Function to handle incoming client connections.
+    @brief Function to handle incoming client connections.
+    @param client_socket The socket object for the connected client.
+    @param client_address The address of the connected client.
     """
     print(f"Connection from {client_address}")
     while server_running:
@@ -106,7 +125,8 @@ def handle_client(client_socket, client_address):
 
 def send_data_to_all_clients(data):
     """
-    Function to send data to all connected clients.
+    @brief Function to send data to all connected clients.
+    @param data The data to be sent to all clients.
     """
     print(f"send data to {len(client_sockets) } clients")
     for client_socket in client_sockets:
@@ -117,7 +137,9 @@ def send_data_to_all_clients(data):
 
 def signal_handler(sig, frame):
     """
-    Signal handler for keyboard interrupt.
+    @brief Signal handler for keyboard interrupt.
+    @param sig The signal number.
+    @param frame The current stack frame.
     """
     global server_running, server_socket
     print("Stopping server...")
@@ -133,7 +155,7 @@ def signal_handler(sig, frame):
 
 def accept_connections():
     """
-    Function to accept incoming connections in a separate thread.
+    @brief Function to accept incoming connections in a separate thread.
     """
     global server_socket
     try:
@@ -151,7 +173,7 @@ def accept_connections():
 
 def main():
     """
-    Main function to start the server and manage Bluetooth read.
+    @brief Main function to start the server and manage Bluetooth simulation.
     """
     # Register signal handler for keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
