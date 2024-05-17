@@ -12,7 +12,10 @@
 
 calc::point KalmanFilter::filter(calc::point input){
     //do crazy kalman shit here :)
-    history.push_back(input);
+    if(history.size()==queueSize){
+        history.pop_back();
+        }
+    history.push_front(input);
     calc::point output=input;
     return output;
 };

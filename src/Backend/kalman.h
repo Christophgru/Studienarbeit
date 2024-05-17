@@ -14,12 +14,14 @@
 
 
 #include "calc.h"
+#include <deque>
 
 class KalmanFilter
 {
 private:
     //add persitantstuff here
-    std::vector<calc::point> history;
+    std::deque<calc::point> history;
+    int queueSize=5;
 public:
     KalmanFilter();
     ~KalmanFilter();
