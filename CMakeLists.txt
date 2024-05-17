@@ -18,6 +18,8 @@ add_executable(Studienarbeit
         src/Backend/stringparser.h
         src/Backend/painthelper.cpp
         src/Backend/painthelper.h
+        src/Backend/kalman.cpp
+        src/Backend/kalman.h
 
 
         #src/archive/test/nDimDist/nDimDist.cpp
