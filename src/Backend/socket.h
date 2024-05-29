@@ -19,7 +19,7 @@
 #include <vector>
 #include <algorithm>
 
-#define DEBUGLEVEL 0
+#define DEBUGLEVEL 1
 #define BUFSIZE 1048
 
 /**

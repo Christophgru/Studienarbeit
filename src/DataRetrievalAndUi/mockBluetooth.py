@@ -25,7 +25,7 @@ clients = set()
 
 basetimesleep=0.05 #avg time will be 1.5x as much
 
-def getanchor(val1_list,id,param2):
+def getanchor(val_list,id,param2):
     """
     @brief Simulate data retrieval from an anchor node.
     @param val1_list List to store the simulated data.
@@ -42,7 +42,7 @@ def getanchor(val1_list,id,param2):
     if id==3:
         val =math.cos(time.time())*param2
     #print(val) 
-    val1_list.append(val)
+    val_list.append(val)
     time.sleep(basetimesleep+random.uniform(0, 1)*basetimesleep)
 
        
