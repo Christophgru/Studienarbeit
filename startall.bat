@@ -21,8 +21,8 @@ REM Start the first Python script in a new command prompt window
 start /min cmd.exe /k "python.exe %SCRIPT_DIR%/src/DataRetrievalAndUi/ui.py"
 
 REM Start the second Python script in a new command prompt window
-start /min cmd.exe /k "python.exe %SCRIPT_DIR%/src/DataRetrievalAndUi/getAnchorData.py"
-
+start /min cmd.exe /k "python.exe %SCRIPT_DIR%/src/DataRetrievalAndUi/mockBluetooth.py"
+REM start /min cmd.exe /k "python.exe %SCRIPT_DIR%/src/DataRetrievalAndUi/getAnchorData.py"
 REM Keep the main window open and wait for user input to terminate
 echo Press Ctrl+C to terminate all processes
 :loop
