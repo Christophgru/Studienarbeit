@@ -106,7 +106,7 @@ double meanDistance(point p, std::vector<line> lines);
 double sqMeanDistance(point p, std::vector<line> lines);
 unsigned char doubleToUnsignedCharInRange(double value);
 bool almostEqual(double a, double b, double epsilon = 1e-10);
-point gradientDescent(point startingpoint, std::vector<line> lines, double gamma = 0.5, int steps = 20, double delta = 1e-10);
+point gradientDescent(point startingpoint, std::vector<line> lines, double gamma = 0.5, int steps = 20, double delta = 1e-15);
 
 double dotProduct(const std::vector<double>& v1, const std::vector<double>& v2);
 std::vector<double> vectorSubtract(const std::vector<double>& v1, const std::vector<double>& v2);
