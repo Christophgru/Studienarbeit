@@ -1,6 +1,7 @@
 
 import json
 import math
+import os
 import signal
 import sys
 import serial
@@ -16,11 +17,8 @@ import websockets
 # Set the server address and port
 port= 12345
 clients = set()
+sensors=None
 
-serialdata_anchor1 = None
-serialdata_anchor2 = None
-val1=0
-val2=0
 
 
 
@@ -31,117 +29,83 @@ def init_serials():
     """
     # baudrate = 115200, ready to send/ clear to send = 1, If a timeout is set it may return less characters as requested.
     # With no timeout it will block until the requested number of bytes is read.
-    global serialdata_anchor1
-    global serialdata_anchor2
-    serialdata_anchor1 = serial.Serial('COM11', 115200, timeout=0.05, rtscts=1)
-    serialdata_anchor2 = serial.Serial('COM12', 115200, timeout=0.05, rtscts=1)
-    try:
-        serialdata_anchor1.isOpen()
-        print("anchor2 (first anchor) is opened!")
+    global sensors
+    for i in range(len(sensors)):
+        sensors[i]['serial']= serial.Serial(sensors[i]["serial_port"], 115200, timeout=0.05, rtscts=1)
+        try:
+            sensors[i]['serial'].isOpen()
+            print("anchor2 (first anchor) is opened!")
 
-    except IOError:
-        serialdata_anchor1.close()
-        serialdata_anchor1.open()
-        print("port was already open, was closed and opened again!")
-    try:
-        serialdata_anchor2.isOpen()
-        print("anchor2 (first anchor) is opened!")
-
-    except IOError:
-        serialdata_anchor2.close()
-        serialdata_anchor2.open()
-        print("port was already open, was closed and opened again!")
+        except IOError:
+            sensors[i]['serial'].close()
+            sensors[i]['serial'].open()
+            print("port was already open, was closed and opened again!")
+    
 
 
 
-def getanchor1(val1_list):
-     """
-    @brief Retrieve data from the first anchor node.
-    @param val1_list List to store the azimuth data from the first anchor node.
-     """
-     if serialdata_anchor1.in_waiting > 0:  # check wether there are data on COM Port for anchor node 1
-        dataStream_anchor1 = str(serialdata_anchor1.read(
-            80))  # cast 80 bytes to string (approximated lenght of +UUDF event is 60 bytes, additionally there are empty lines between two events, 80 proved to be favourable)
-        regex_anchor1 = re.split("UUDF:",
-                                    dataStream_anchor1)  # regular expression split the data on the UUDF: string for work on events
-        for listing in regex_anchor1:
-            if "6C1DEBA0982F" in listing:  # check if the event data is corresponding to the correct anchor node
-                parts = listing.split(",")
-                if len(parts) == 9:  # check if the splitted event data is complete
-                    val1 =-int(parts[2])   # fetches the azimut data (theta2) from the string and add the rotational offset value
-                    val1_list.append(val1)
-                    # print(datetime.datetime.now())"""
-        serialdata_anchor1.reset_input_buffer()  # alternative mehod flush() forces a data transfer from COM port of anchor node 1 and clears the serial data on this Port afterwards
-     
-def getanchor2(val2_list):
+
+def getanchor(sensor):
     """
     @brief Retrieve data from the second anchor node.
     @param val2_list List to store the azimuth data from the second anchor node.
-"""
-    if serialdata_anchor2.in_waiting > 0:
-        dataStream_anchor2 = str(serialdata_anchor2.read(80))
+    """
+    if sensor['serial'].in_waiting > 0:
+        dataStream_anchor = str(sensor['serial'].read(80))
         #print(dataStream_anchor2)
-        regex_anchor2 = re.split("UUDF:", dataStream_anchor2)
-        for listing in regex_anchor2:
-            if "6C1DEBA79E2D" in listing:
+        regex_anchor = re.split("UUDF:", dataStream_anchor)
+        for listing in regex_anchor:
+            if sensor['id'] in listing:
                 parts = listing.split(",")
                 if len(parts) == 9:
-                    val2=-int(parts[2])
-                    val2_list.append(val2)
-                    # print(datetime.datetime.now())"""
-        serialdata_anchor2.reset_input_buffer()
-        # averaging the azimut information of anchor node 1 and anchor node 2 about the last four records
+                    val=-int(parts[2])
+                    sensor['val'].append(val)
+        sensor['serial'].reset_input_buffer()
 
 def on_close():
     """
     @brief Close the serial connections and exit the program.
     """
-    serialdata_anchor1.close()
-    serialdata_anchor2.close()
+    sensors[0]['serial'].close()
+    sensors[1]['serial'].close()
     exit()
 
-def getValues(theta2_offset=60
-              , theta3_offset=120
-              ):
+def getValues(lastvalue):
     """
     @brief Retrieve and process values from the anchor nodes.
     @param theta2_offset Azimuth offset for the first anchor node.
     @param theta3_offset Azimuth offset for the second anchor node.
     @return A list of dictionaries with processed values or 0 if no change.
-"""
-    global val1
-    global val2
-    val1_list=[]
-    val2_list=[]#todo abstract for n antennas
-
-    thread1 = threading.Thread(target=getanchor1, args=(val1_list,))
-
-    thread2 = threading.Thread(target=getanchor2, args=(val2_list,))
-    thread1.start() 
-    thread2.start()
-
-    thread1.join()
-    thread2.join()
+    """
+    global sensors
+    numSensors=len(sensors)
     changed=False
-    try:
-    # Retrieve the result from the list
-        if val1_list[0]!=None:
-            val1 = val1_list[0]
+    results=[]
+    for i in range(numSensors):
+        results.append(None)
+        sensors[i]['val']=[]
+        sensors[i]['thread'] = threading.Thread(target=getanchor, args=(sensors[i],))
+        sensors[i]['thread'].start()
+    
+
+    for i in range(numSensors):
+       sensors[i]['thread'].join()
+        
+    for i in range(numSensors):
+        try:
+        # Retrieve the result from the list
+            sensors[i]['result'] = sensors[i]['val'][0]
             changed=True
-    except IndexError:
-        # Set val1 to None if the index is out of range
-        print("Val1 skipped")
-    try:
-    # Retrieve the result from the list
-        if val2_list[0]!=None:
-            val2 = val2_list[0]
-            changed=True
-    except IndexError:
-        # Set val1 to None if the index is out of range
-        print("Val2 skipped")
-    print(val1,val2)
+        except IndexError:
+            # Keep old Value if the index is out of range (No Value read)
+            None
+    
+    for i in range(numSensors):
+        results[i]={"theta":sensors[i]['theta'],"val":sensors[i]['result'],"xpos":sensors[i]['xpos']}
+    
     if changed:
-        return [{"theta":theta2_offset,"val":val1,"xpos":0},{"theta":theta3_offset,"val":val2,"xpos":3}]
+        #print(results)
+        return results
     else: 
         return 0
 
@@ -152,7 +116,7 @@ client_sockets = []
 
 def handle_client(client_socket, client_address):
     """
-     @brief Handle incoming client connections.
+    @brief Handle incoming client connections.
     @param client_socket The socket object for the connected client.
     @param client_address The address of the connected client.
     """
@@ -239,19 +203,26 @@ def main():
 
     print("Webserver started, start Bluetooth read")
 
+    global sensors
+    script_dir = os.path.dirname(__file__)
+    json_file_path = os.path.join(script_dir, 'Sensor_Config.json')
+    with open(json_file_path, 'r') as file:
+        sensors = json.load(file)
+    print(sensors)
+
     # Your Bluetooth read logic goes here
     init_serials()
-    last_value = [None, None]
-    
+    temp=[None]
     while True:
         try:
-            temp = getValues()
-            if temp!=0:
+            val = getValues(temp)
+            if val!=0:
+                temp=val
                 message_final = json.dumps(temp)
-              #  print(message_final)
+                #  print(message_final)
                 send_data_to_all_clients(message_final)
         except Exception as e:
-            print(f"Error in Bluetooth read: {e}")
+            print(f"Error in Bluetooth read: {e}(No Data to read)")
 
 if __name__ == "__main__":
     main()

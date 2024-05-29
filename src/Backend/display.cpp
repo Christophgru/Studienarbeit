@@ -25,6 +25,7 @@ void display::projectPos(std::vector<calc::SensorValue> angles, calc::point p) {
         json j;
         j["point"]["position"] = p.position;
         j["point"]["Uncertainty"] = p.Uncertainty;
+        std::cout<<"\n\n"<<p.getx()<< " | "<<p.gety()<<";\t"<<angles.size()<< " values: ";
 
         for (size_t i = 0; i < angles.size(); ++i) {
             json sensor;
@@ -32,7 +33,9 @@ void display::projectPos(std::vector<calc::SensorValue> angles, calc::point p) {
             sensor["val"] = angles[i].val;
             sensor["xpos"] = angles[i].xpos;
             j["sensor_values"].push_back(sensor);
+            std::cout<<i<< " : val:"<<angles[i].val<<"theta: " <<angles[i].theta<<" xpos:"<< angles[i].xpos;
         }
+        
 
         // Convert JSON to string
         std::string jsonStr = j.dump();
