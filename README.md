@@ -1,6 +1,9 @@
 # This is the README for Studienarbeit Bluetoothtracker
 
 The sourcecoe above contains three independent software modules, that communicate over websockets.
+
+## HowTo
+To start and execute the code, try the `startall.bat` script for Windows machines. 
 ### Dataretrieval
 Use Py 3.12 to execute the files src\DataRetrievalAndUi\mockBluetooth.py and src\DataRetrievalAndUi\getAnchorData.py retrieve/mock the needed information of the XPLR-AOA-1 Kit https://www.u-blox.com/en/product/xplr-aoa-1-kit.
 ### Dataoptimisation
