@@ -24,7 +24,7 @@ void display::projectPos(std::vector<calc::SensorValue> angles, calc::point p) {
     try {
         json j;
         j["point"]["position"] = p.position;
-        j["point"]["Uncertainty"] = p.Uncertainty;
+        j["point"]["Uncertainty"] = p.uncertainty;
         std::cout<<"\n\n"<<p.getx()<< " | "<<p.gety()<<";\t"<<angles.size()<< " values: ";
 
         for (size_t i = 0; i < angles.size(); ++i) {

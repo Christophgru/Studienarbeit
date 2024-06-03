@@ -31,6 +31,7 @@ def init_serials():
     # With no timeout it will block until the requested number of bytes is read.
     global sensors
     for i in range(len(sensors)):
+        print(f"Open Sensor {i}:{sensors[i]["serial_port"]} ")
         sensors[i]['serial']= serial.Serial(sensors[i]["serial_port"], 115200, timeout=0.05, rtscts=1)
         try:
             sensors[i]['serial'].isOpen()
@@ -50,8 +51,10 @@ def getanchor(sensor):
     @brief Retrieve data from the second anchor node.
     @param val2_list List to store the azimuth data from the second anchor node.
     """
+    
     if sensor['serial'].in_waiting > 0:
         dataStream_anchor = str(sensor['serial'].read(80))
+        print(sensor["serial_port"],dataStream_anchor)
         #print(dataStream_anchor2)
         regex_anchor = re.split("UUDF:", dataStream_anchor)
         for listing in regex_anchor:
@@ -66,8 +69,8 @@ def on_close():
     """
     @brief Close the serial connections and exit the program.
     """
-    sensors[0]['serial'].close()
-    sensors[1]['serial'].close()
+    for s in sensors:
+        s['serial'].close()
     exit()
 
 def getValues(lastvalue):
@@ -100,10 +103,11 @@ def getValues(lastvalue):
             # Keep old Value if the index is out of range (No Value read)
             None
     
-    for i in range(numSensors):
-        results[i]={"theta":sensors[i]['theta'],"val":sensors[i]['result'],"xpos":sensors[i]['xpos']}
+    
     
     if changed:
+        for i in range(numSensors):
+            results[i]={"theta":sensors[i]['theta'],"val":sensors[i]['result'],"xpos":sensors[i]['xpos']}
         #print(results)
         return results
     else: 
