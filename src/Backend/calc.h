@@ -29,14 +29,14 @@ namespace calc {
  */
 struct point {
     std::vector<double> position; ///< Position of the point
-    double Uncertainty; ///< Uncertainty of the point's position
+    std::vector<double> uncertainty; ///< Uncertainty of the point's position
 
     /**
      * @brief Constructor for point.
      * @param f Position of the point.
      * @param Uncertainty Uncertainty of the point's position.
      */
-    point(std::vector<double> f, double Uncertainty = 0);
+    point(std::vector<double> f, std::vector<double> uncertainty={0} );
 
     /**
      * @brief Sets the x-coordinate of the point.
@@ -69,13 +69,14 @@ struct point {
 struct line {
     std::vector<double> start; ///< Start point of the line
     std::vector<double> direction; ///< Direction vector of the line
+    double uncertainty;
 
     /**
      * @brief Constructor for line.
      * @param start Start point of the line.
      * @param direction Direction vector of the line.
      */
-    line(std::vector<double> start, std::vector<double> direction);
+    line(std::vector<double> start, std::vector<double> direction, double uncertainty=0.0);
 
     /**
      * @brief Gets a point on the line.
@@ -107,7 +108,7 @@ double sqMeanDistance(point p, std::vector<line> lines);
 unsigned char doubleToUnsignedCharInRange(double value);
 bool almostEqual(double a, double b, double epsilon = 1e-10);
 point gradientDescent(point startingpoint, std::vector<line> lines, double gamma = 0.5, int steps = 20, double delta = 1e-15);
-
+double maxUncertainty(point p, std::vector<line> l);
 double dotProduct(const std::vector<double>& v1, const std::vector<double>& v2);
 std::vector<double> vectorSubtract(const std::vector<double>& v1, const std::vector<double>& v2);
 std::vector<double> scalarMultiply(const std::vector<double>& v, double scalar);

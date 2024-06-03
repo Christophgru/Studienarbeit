@@ -11,6 +11,7 @@
 
 #include "calc.h"
 #include <cassert>
+#include <algorithm>
 
 namespace calc {
 
@@ -28,7 +29,8 @@ point getPosFromAngles(std::vector<SensorValue> sensorData, point lastPoint) {
         double xCord = value.xpos;
         if(DEBUGLEVEL) std::cout << " theta:" << value.theta << " sensor_out: " << value.val << " [angle: " << sinf(angle_rad) << "/" << angle << " pos: " << xCord << "] ";
         if(DEBUGLEVEL) std::cout << "[" << cosf(angle_rad) << "|" << sinf(angle_rad) << "]\n";
-        line l = line({xCord, 0}, {cosf(angle_rad), sinf(angle_rad)});
+        double uncertainty_angle=5e-11*pow(value.val,6)+5.1;
+        line l = line({xCord, 0}, {cosf(angle_rad), sinf(angle_rad)}, uncertainty_angle);
         lines.push_back(l);
     }
     if (std::isnan(lastPoint.getx())) {
@@ -39,10 +41,42 @@ point getPosFromAngles(std::vector<SensorValue> sensorData, point lastPoint) {
     }
 
     point p = gradientDescent(lastPoint, lines);
+    
 
     if(DEBUGLEVEL) std::cout << "calculated pos (" << p.getx() << "|" << p.gety() << ")" << std::endl << std::endl << std::endl;
+
+    p.uncertainty=std::vector<double>(p.position.size(),maxUncertainty(p,lines));
     return p;
 }
+
+/**
+ * @brief Calculates highest expected uncertainty between point and 2nd most precise line.
+ * @param p point.
+ * @param lines lines with uncertainty.
+ * @return highest expected diffrence.
+ */
+double maxUncertainty(point p, std::vector<line> lines){
+    if(lines.size()<2)return 0;
+    std::vector<double> uncertainties;
+    for(line l : lines){
+        double angle =atan(l.direction[1]/l.direction[0]);
+        double highangle=angle+l.uncertainty;
+        double lowangle=angle-l.uncertainty;
+        line highline=line(l.start, {cosf(highangle), sinf(highangle)});
+        line lowline=line(l.start, {cosf(lowangle), sinf(lowangle)});
+
+        double disthigh=distance(p,highline);
+        double distlow=distance(p, lowline);
+
+        double biggerdiff=(disthigh>distlow)?disthigh:distlow;
+        uncertainties.push_back(biggerdiff);
+    }
+    std::sort(uncertainties.begin(), uncertainties.end(), [](double a, double b) {
+        return a < b;
+    });
+    return uncertainties[1];//return second smallest uncertainty
+    
+};
 
 /**
  * @brief Checks if two doubles are almost equal.
@@ -171,9 +205,10 @@ double sqMeanDistance(point p, std::vector<line> lines) {
  * @param start Start point of the line.
  * @param direction Direction vector of the line.
  */
-line::line(std::vector<double> start, std::vector<double> direction) {
+line::line(std::vector<double> start, std::vector<double> direction, double uncertainty) {
     this->direction = direction;
     this->start = start;
+    this->uncertainty=uncertainty;
 }
 
 /**
@@ -181,9 +216,13 @@ line::line(std::vector<double> start, std::vector<double> direction) {
  * @param f Position of the point.
  * @param Uncertainty Uncertainty of the point's position.
  */
-point::point(std::vector<double> f, double Uncertainty) {
+point::point(std::vector<double> f, std::vector<double> uncertainty) {
     position = f;
-    this->Uncertainty = Uncertainty;
+    if(uncertainty.size()==1 &&uncertainty[0]==0){//if uncertainty was not passed
+        this->uncertainty=std::vector<double>(f.size()); //initialize uncertainty in all dimensions with 0 
+    }else{
+        this->uncertainty = uncertainty;
+    }
 }
 
 /**
