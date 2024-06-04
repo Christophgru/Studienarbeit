@@ -12,7 +12,7 @@
 #ifndef STUDIENARBEIT_CALC_H
 #define STUDIENARBEIT_CALC_H
 
-#define DEBUGLEVEL 0
+#define DEBUGLEVEL 1
 
 #include <vector>
 #include <cmath>
@@ -91,7 +91,7 @@ struct line {
 struct SensorValue {
     double theta; ///< Angle of the sensor
     double val; ///< Sensor output value
-    double xpos; ///< x-position of the sensor
+    std::vector<double> pos; ///< x-position of the sensor
 };
 
 /**

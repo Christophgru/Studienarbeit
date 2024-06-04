@@ -11,6 +11,7 @@
 
 #include "calc.h"
 #include <cassert>
+#include <iterator>
 #include <algorithm>
 
 namespace calc {
@@ -26,11 +27,13 @@ point getPosFromAngles(std::vector<SensorValue> sensorData, point lastPoint) {
     for (SensorValue value : sensorData) {
         double angle = value.theta + value.val;
         double angle_rad = angle / 180 * M_PI;
-        double xCord = value.xpos;
-        if(DEBUGLEVEL) std::cout << " theta:" << value.theta << " sensor_out: " << value.val << " [angle: " << sinf(angle_rad) << "/" << angle << " pos: " << xCord << "] ";
+        std::vector<double> coord = value.pos;
+        if(DEBUGLEVEL) {std::cout << " theta:" << value.theta << " sensor_out: " << value.val << " [angle: " << sinf(angle_rad) << "/" << angle << " pos: " ;
+            std::copy(coord.begin(), coord.end(), std::ostream_iterator<double>(std::cout, " "));
+            std::cout << "] ";}
         if(DEBUGLEVEL) std::cout << "[" << cosf(angle_rad) << "|" << sinf(angle_rad) << "]\n";
         double uncertainty_angle=5e-11*pow(value.val,6)+5.1;
-        line l = line({xCord, 0}, {cosf(angle_rad), sinf(angle_rad)}, uncertainty_angle);
+        line l = line(coord, {cosf(angle_rad), sinf(angle_rad)}, uncertainty_angle);
         lines.push_back(l);
     }
     if (std::isnan(lastPoint.getx())) {

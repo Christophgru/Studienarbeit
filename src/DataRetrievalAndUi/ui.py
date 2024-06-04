@@ -8,6 +8,7 @@
 import json
 import math
 import socket
+import sys
 import threading
 import time
 import tkinter as tk
@@ -64,7 +65,7 @@ def update_display(msg, firstcall):
     try:
         # Parse the JSON message
         data = json.loads(msg)
-
+        #print(data)
         # Extract xpos and ypos from the 'point' dictionary
         xpos, ypos = data.get('point', {}).get('position', [None, None])
 
@@ -97,7 +98,8 @@ def update_point_on_canvas(xpos, ypos):
     # Calculate canvas coordinates
     canvas_x = (xpos - X_MIN) * (CANVAS_WIDTH / (X_MAX - X_MIN))
     canvas_y = CANVAS_HEIGHT - (ypos - Y_MIN) * (CANVAS_HEIGHT / (Y_MAX - Y_MIN))
-    print(f"canvasy: {canvas_y} posy:{ypos}")
+    #print(f"\rcanvasy: {canvas_y} posy:{ypos}", end='')
+    sys.stdout.flush()
 
     # Draw new point
     canvas.create_oval(canvas_x - POINT_SIZE, canvas_y - POINT_SIZE, canvas_x + POINT_SIZE, canvas_y + POINT_SIZE, fill="red", tags="point")
@@ -115,37 +117,41 @@ def visualize_sensors(sensor_values, firstcall):
         theta = math.radians(sensor.get('theta', 0))
         val = math.radians(sensor.get('val', 0))
         resAngle=theta+val
-        xpos = sensor.get('xpos', 0)
+        xpos = sensor.get('pos', 0)[0]
+        ypos = sensor.get('pos', 0)[1]#freshly added
+        print(f"\rx:{xpos};y:{ypos}", end='')
 
 
         # Calculate canvas coordinates for the sensor position
         canvas_x = (xpos - X_MIN) * (CANVAS_WIDTH / (X_MAX - X_MIN))
+        canvas_y = (Y_MAX - ypos) * (CANVAS_HEIGHT / (Y_MAX - Y_MIN))  # Adjusted for Y-coordinate
+
        
 
         # Calculate endpoint of the line based on angle and length
         line_length = 6000  # Adjust as needed
         end_x = canvas_x + line_length * math.cos(resAngle) 
-        end_y = baseY - line_length * math.sin(resAngle)  * (width / height)  # Adjust angle based on resolution
+        end_y = canvas_y - line_length * math.sin(resAngle) * (CANVAS_WIDTH / CANVAS_HEIGHT)  # Adjusted for Y-coordinate
 
         # Draw line originating from the box
-        canvas.create_line(canvas_x, baseY, end_x, end_y, fill="black", tags="sensordata")
+        canvas.create_line(canvas_x, canvas_y, end_x, end_y, fill="black", tags="sensordata")
 
 
         if firstcall:
         # Draw green box
-            canvas.create_rectangle(canvas_x - 5, baseY-5, canvas_x + 5, baseY+5, fill="green", tags="sensor")
+            canvas.create_rectangle(canvas_x - 5, canvas_y-5, canvas_x + 5, canvas_y+5, fill="green", tags="sensor")
         
             # Draw short lines around the sensor
             for angle in range(0, 360, 20):
                     angle_rad = math.radians(angle)
                     short_line_length = 50
                     short_end_x = canvas_x + short_line_length * math.cos(angle_rad)
-                    short_end_y = baseY - short_line_length * math.sin(angle_rad) * (width / height)
-                    canvas.create_line(canvas_x, baseY, short_end_x, short_end_y, fill="black", tags="sensor")
+                    short_end_y = canvas_y - short_line_length * math.sin(angle_rad) * (width / height)
+                    canvas.create_line(canvas_x, canvas_y, short_end_x, short_end_y, fill="black", tags="sensor")
                     
                     # Add angle labels
                     label_x = canvas_x + (short_line_length + 10) * math.cos(angle_rad)
-                    label_y = baseY - (short_line_length + 10) * math.sin(angle_rad) * (width / height)
+                    label_y = canvas_y - (short_line_length + 10) * math.sin(angle_rad) * (width / height)
                     angle_label = f"{angle}°"
                     canvas.create_text(label_x, label_y, text=angle_label, fill="black", tags="sensor")
 

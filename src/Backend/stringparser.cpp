@@ -21,20 +21,35 @@ std::vector<calc::SensorValue> getangles(const std::string& s) {
     std::vector<calc::SensorValue> sensorValues;
 
     try {
-        if(DEBUGLEVEL) std::cout << s << std::endl;
-        size_t lastBracketPos = s.find_last_of('[');
+        if(DEBUGLEVEL);
+        std::cout<<std::endl<<"received string:" << s << std::endl;
+        std::string begin_msg="[{";
+        size_t lastBracketPos = s.rfind(begin_msg.c_str());
+        if (lastBracketPos == std::string::npos) {
+            std::cout<<"invalid json"<<std::endl;
+            throw std::invalid_argument("Invalid JSON string format");
+        }
 
         // Extract the content of the last square brackets
         std::string sl = s.substr(lastBracketPos);
+        std::cout<<"short:"<<sl<<std::endl;
         json j = json::parse(sl);
 
         for (const auto& item : j) {
+            std::cout<<"parse";
             calc::SensorValue value;
             value.theta = item["theta"].get<double>();
             value.val = item["val"].get<double>();
-            value.xpos = item["xpos"].get<double>();
+            for (const auto& posValue : item["pos"]) {
+                value.pos.push_back(posValue.get<double>());
+            }
             sensorValues.push_back(value);
         }
+        std::cout<<"done";
+    } catch (const json::parse_error& e) {
+        std::cerr << "JSON parse error: " << e.what() << std::endl;
+    } catch (const json::type_error& e) {
+        std::cerr << "JSON type error: " << e.what() << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Error parsing JSON: " << e.what() << std::endl;
     }

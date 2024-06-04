@@ -107,8 +107,8 @@ def getValues(lastvalue):
     
     if changed:
         for i in range(numSensors):
-            results[i]={"theta":sensors[i]['theta'],"val":sensors[i]['result'],"xpos":sensors[i]['xpos']}
-        #print(results)
+            results[i]={"theta":sensors[i]['theta'],"val":sensors[i]['result'],"pos":sensors[i]['pos']}
+        print(results)
         return results
     else: 
         return 0
@@ -117,6 +117,7 @@ def getValues(lastvalue):
 server_running = True
 server_socket = None
 client_sockets = []
+num_pack=0
 
 def handle_client(client_socket, client_address):
     """
@@ -144,7 +145,10 @@ def send_data_to_all_clients(data):
     @brief Send data to all connected clients.
     @param data The data to be sent to all clients.
     """
-    print(f"send data to {len(client_sockets) } clients")
+    global num_pack
+    num_pack=num_pack+1
+    spinner_chars = ['/', '|', '\\', '-']
+    print(f"\rSending data to {len(client_sockets)} clients[{num_pack}]{spinner_chars[num_pack % len(spinner_chars)]}", end='')
     for client_socket in client_sockets:
         try:
             client_socket.sendall(data.encode('utf-8'))

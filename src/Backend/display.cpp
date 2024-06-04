@@ -31,9 +31,9 @@ void display::projectPos(std::vector<calc::SensorValue> angles, calc::point p) {
             json sensor;
             sensor["theta"] = angles[i].theta;
             sensor["val"] = angles[i].val;
-            sensor["xpos"] = angles[i].xpos;
+            sensor["pos"] = angles[i].pos;
             j["sensor_values"].push_back(sensor);
-            std::cout<<i<< " : val:"<<angles[i].val<<"theta: " <<angles[i].theta<<" xpos:"<< angles[i].xpos;
+            std::cout<<i<< " : val:"<<angles[i].val<<"theta: " <<angles[i].theta<<" xpos:"<< angles[i].pos[0]<<" ypos:"<< angles[i].pos[0];
         }
         
 
