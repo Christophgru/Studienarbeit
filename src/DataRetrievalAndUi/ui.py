@@ -118,8 +118,9 @@ def visualize_sensors(sensor_values):
 
         # Calculate endpoint of the line based on angle and length
         line_length = 6000  # Adjust as needed
-        end_x = canvas_x + line_length * math.cos(resAngle)*aspect_ratio
-        end_y = canvas_y - line_length * math.sin(resAngle)
+        end_x = canvas_x + line_length * math.cos(resAngle) * aspect_ratio
+        end_y = canvas_y - line_length * math.sin(resAngle) * 0.85#wtf, this should be 1
+
 
         # Draw line originating from the box
         canvas.create_line(canvas_x, canvas_y, end_x, end_y, fill="black", tags="sensordata")
@@ -133,13 +134,13 @@ def visualize_sensors(sensor_values):
             for angle in range(0, 360, 20):
                 angle_rad = math.radians(angle)
                 short_line_length = 50
-                short_end_x = canvas_x + short_line_length * math.cos(angle_rad)
-                short_end_y = canvas_y - short_line_length * math.sin(angle_rad) * (canvas.winfo_width() / canvas.winfo_height())
+                short_end_x = canvas_x + short_line_length * math.cos(angle_rad) *  aspect_ratio
+                short_end_y = canvas_y - short_line_length * math.sin(angle_rad) 
                 canvas.create_line(canvas_x, canvas_y, short_end_x, short_end_y, fill="black", tags="sensor")
 
                 # Add angle labels
-                label_x = canvas_x + (short_line_length + 10) * math.cos(angle_rad)
-                label_y = canvas_y - (short_line_length + 10) * math.sin(angle_rad) * (canvas.winfo_width() / canvas.winfo_height())
+                label_x = canvas_x + (short_line_length + 10) * math.cos(angle_rad) *  aspect_ratio
+                label_y = canvas_y - (short_line_length + 10) * math.sin(angle_rad)
                 angle_label = f"{angle}°"
                 canvas.create_text(label_x, label_y, text=angle_label, fill="black", tags="sensor")
     
