@@ -117,7 +117,7 @@ def visualize_sensors(sensor_values):
 
 
         # Calculate endpoint of the line based on angle and length
-        line_length = 6000  # Adjust as needed
+        line_length = 600  # Adjust as needed
         end_x = canvas_x + line_length * math.cos(resAngle) * aspect_ratio
         end_y = canvas_y - line_length * math.sin(resAngle) * 0.85#wtf, this should be 1
 

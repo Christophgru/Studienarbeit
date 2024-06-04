@@ -60,7 +60,7 @@ def getValues(
     @brief Retrieve and process simulated values from anchor nodes.
     @return A list of dictionaries with processed values or 0 if no change.
     """
-    thetalist=[45,110,80,100]
+    thetalist=[70,110,80,100]
     poslist=[[0,0],[3,0],[1,0],[2,0]]
     assert(len(thetalist)==len(poslist))
     numSensors=len(thetalist)
