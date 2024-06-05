@@ -54,7 +54,7 @@ def getanchor(sensor):
     
     if sensor['serial'].in_waiting > 0:
         dataStream_anchor = str(sensor['serial'].read(80))
-        print(sensor["serial_port"],dataStream_anchor)
+        #print(sensor["serial_port"],dataStream_anchor)
         #print(dataStream_anchor2)
         regex_anchor = re.split("UUDF:", dataStream_anchor)
         for listing in regex_anchor:
@@ -108,7 +108,7 @@ def getValues(lastvalue):
     if changed:
         for i in range(numSensors):
             results[i]={"theta":sensors[i]['theta'],"val":sensors[i]['result'],"pos":sensors[i]['pos']}
-        print(results)
+        #print(results)
         return results
     else: 
         return 0
@@ -216,7 +216,7 @@ def main():
     json_file_path = os.path.join(script_dir, 'Sensor_Config.json')
     with open(json_file_path, 'r') as file:
         sensors = json.load(file)
-    print(sensors)
+    #print(sensors)
 
     # Your Bluetooth read logic goes here
     init_serials()
@@ -227,10 +227,10 @@ def main():
             if val!=0:
                 temp=val
                 message_final = json.dumps(temp)
-                #  print(message_final)
+                #print(message_final)
                 send_data_to_all_clients(message_final)
         except Exception as e:
-            print(f"Error in Bluetooth read: {e}(No Data to read)")
+            None
 
 if __name__ == "__main__":
     main()

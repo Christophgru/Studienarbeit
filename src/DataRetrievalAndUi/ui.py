@@ -117,9 +117,9 @@ def visualize_sensors(sensor_values):
 
 
         # Calculate endpoint of the line based on angle and length
-        line_length = 600  # Adjust as needed
+        line_length = 1200  # Adjust as needed
         end_x = canvas_x + line_length * math.cos(resAngle) * aspect_ratio
-        end_y = canvas_y - line_length * math.sin(resAngle) * 0.85#wtf, this should be 1
+        end_y = canvas_y - line_length * math.sin(resAngle) * 0.29#wtf, this should be 1
 
 
         # Draw line originating from the box
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     POINT_SIZE = 5
     TICK_SIZE = 5
     X_MIN, X_MAX = -1, 5
-    Y_MIN, Y_MAX = -1, 6
+    Y_MIN, Y_MAX = -1, 20
 
     # Initialize Tkinter GUI
     root = tk.Tk()

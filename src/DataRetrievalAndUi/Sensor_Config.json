@@ -12,12 +12,5 @@
         "pos": [3,0],
         "id": "6C1DEBA79E2D",
         "serial_port": "COM12"
-    },
-    {
-        "index": 2,
-        "theta": 90,
-        "pos": [2,0],
-        "id": "XYZ",
-        "serial_port": "COM5"
     }
 ]
