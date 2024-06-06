@@ -21,7 +21,7 @@ import asyncio
 
 displaydebuginfo=0
 HOST = '127.0.0.1'  # localhost
-PORT = 12346
+PORT = 12346    
 
 
 
@@ -97,7 +97,7 @@ def update_point_on_canvas(xpos, ypos):
     # Calculate canvas coordinates
     canvas_x = (xpos - X_MIN) * (CANVAS_WIDTH / (X_MAX - X_MIN))
     canvas_y = CANVAS_HEIGHT - (ypos - Y_MIN) * (CANVAS_HEIGHT / (Y_MAX - Y_MIN))
-    print(f"canvasy: {canvas_y} posy:{ypos}")
+    print(f"pox: {xpos} posy:{ypos}")
 
     # Draw new point
     canvas.create_oval(canvas_x - POINT_SIZE, canvas_y - POINT_SIZE, canvas_x + POINT_SIZE, canvas_y + POINT_SIZE, fill="red", tags="point")
@@ -197,8 +197,8 @@ if __name__ == "__main__":
     # Initialize constants for the canvas
     POINT_SIZE = 5
     TICK_SIZE = 5
-    X_MIN, X_MAX = -1, 5
-    Y_MIN, Y_MAX = -1, 5
+    X_MIN, X_MAX = -3, 8
+    Y_MIN, Y_MAX = -1, 12
     CANVAS_WIDTH, CANVAS_HEIGHT = 500, 500
     POINT_SIZE = 5
     height=Y_MAX-Y_MIN

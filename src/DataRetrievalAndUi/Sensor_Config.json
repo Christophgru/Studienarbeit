@@ -12,12 +12,5 @@
         "xpos": 3,
         "id": "6C1DEBA79E2D",
         "serial_port": "COM12"
-    },
-    {
-        "index": 2,
-        "theta": 90,
-        "xpos": 2,
-        "id": "XYZ",
-        "serial_port": "COM5"
     }
 ]
