@@ -19,5 +19,5 @@ Use Py3.12 for the file src\DataRetrievalAndUi\ui.py to display the calculated D
 
 ### Authors
 
-Jonathan Simon
-Chrostoph Gründer
+Jonathan Simon \
+Christoph Gründer

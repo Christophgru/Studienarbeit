@@ -100,6 +100,8 @@ def visualize_sensors(sensor_values):
     # Clear existing sensor visualizations
     canvas_width = canvas.winfo_width()
     canvas_height = canvas.winfo_height()
+    graph_height=Y_MAX-Y_MIN
+    graph_width=X_MAX-X_MIN
     canvas.delete("sensordata")
     global firstcall
     for sensor in sensor_values:
@@ -117,9 +119,9 @@ def visualize_sensors(sensor_values):
 
 
         # Calculate endpoint of the line based on angle and length
-        line_length = 1200  # Adjust as needed
-        end_x = canvas_x + line_length * math.cos(resAngle) * aspect_ratio
-        end_y = canvas_y - line_length * math.sin(resAngle) * 0.29#wtf, this should be 1
+        line_length = 5000  # Adjust as needed
+        end_x = canvas_x + line_length * math.cos(resAngle) * aspect_ratio #* aspect_ratio
+        end_y = canvas_y - line_length * math.sin(resAngle) * (graph_width/graph_height)#* 0.29#wtf, this should be 1
 
 
         # Draw line originating from the box
