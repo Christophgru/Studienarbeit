@@ -34,9 +34,9 @@ def getanchor(val_list,id,param2):
     """
     val=None
     if id==0:
-        val =math.cos(time.time())
+        val =math.cos(time.time()+3)
     if id==1:
-        val =0.5*math.sin(time.time())*param2
+        val =math.sin(time.time())*param2
     if id==2:
         val =math.sin(time.time())*param2
     if id==3:
@@ -60,8 +60,8 @@ def getValues(
     @brief Retrieve and process simulated values from anchor nodes.
     @return A list of dictionaries with processed values or 0 if no change.
     """
-    thetalist=[70,110,80,100]
-    poslist=[[0,0],[3,0],[1,0],[2,0]]
+    thetalist=[90,90]
+    poslist=[[1,0],[3,0]]
     assert(len(thetalist)==len(poslist))
     numSensors=len(thetalist)
     vallist=[]

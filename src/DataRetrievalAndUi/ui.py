@@ -40,9 +40,12 @@ def server_thread():
                                 break
 
                             msg = data.decode()
+                            last_occurance=msg.rfind('{"point":')
+                            if(last_occurance!=-1):
+                                last_msg=msg[last_occurance:]
                             if displaydebuginfo:
-                                print("Received:", msg)
-                            update_display(msg)
+                                print("Received:", last_msg)
+                            update_display(last_msg)
         except Exception as e:
             print(f"Exception occurred: {e}. Restarting server...")
 
@@ -137,12 +140,12 @@ def visualize_sensors(sensor_values):
                 angle_rad = math.radians(angle)
                 short_line_length = 50
                 short_end_x = canvas_x + short_line_length * math.cos(angle_rad) *  aspect_ratio
-                short_end_y = canvas_y - short_line_length * math.sin(angle_rad) 
+                short_end_y = canvas_y - short_line_length * math.sin(angle_rad) * (graph_width/graph_height)
                 canvas.create_line(canvas_x, canvas_y, short_end_x, short_end_y, fill="black", tags="sensor")
 
                 # Add angle labels
                 label_x = canvas_x + (short_line_length + 10) * math.cos(angle_rad) *  aspect_ratio
-                label_y = canvas_y - (short_line_length + 10) * math.sin(angle_rad)
+                label_y = canvas_y - (short_line_length + 10) * math.sin(angle_rad)* (graph_width/graph_height)
                 angle_label = f"{angle}°"
                 canvas.create_text(label_x, label_y, text=angle_label, fill="black", tags="sensor")
     

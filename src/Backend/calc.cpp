@@ -286,8 +286,10 @@ unsigned char doubleToUnsignedCharInRange(double value) {
  */
 point gradientDescent(point startingPoint, std::vector<line> lines, double gamma, int steps, double delta) {
     if (steps == 0 || std::isnan(startingPoint.getx()) || std::isnan(startingPoint.gety())) {
+        printf("done\n");
         return startingPoint;
     }
+    printf(".");
     double dist = sqMeanDistance(startingPoint, lines);
     double deltaDistX = dist - sqMeanDistance(point({startingPoint.getx() + delta, startingPoint.gety()}), lines);
     double incX = deltaDistX / delta;
