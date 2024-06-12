@@ -12,7 +12,7 @@
 #ifndef STUDIENARBEIT_CALC_H
 #define STUDIENARBEIT_CALC_H
 
-#define DEBUGLEVEL 0
+#define DEBUGLEVEL 1
 
 #include <vector>
 #include <cmath>
@@ -91,7 +91,7 @@ struct line {
 struct SensorValue {
     double theta; ///< Angle of the sensor
     double val; ///< Sensor output value
-    double xpos; ///< x-position of the sensor
+    std::vector<double> pos; ///< x-position of the sensor
 };
 
 /**
@@ -107,7 +107,7 @@ double meanDistance(point p, std::vector<line> lines);
 double sqMeanDistance(point p, std::vector<line> lines);
 unsigned char doubleToUnsignedCharInRange(double value);
 bool almostEqual(double a, double b, double epsilon = 1e-10);
-point gradientDescent(point startingpoint, std::vector<line> lines, double gamma = 0.5, int steps = 20, double delta = 1e-15);
+point gradientDescent(point startingpoint, std::vector<line> lines, double gamma = .5, int steps = 20, double delta = 1e-15);
 double maxUncertainty(point p, std::vector<line> l);
 double dotProduct(const std::vector<double>& v1, const std::vector<double>& v2);
 std::vector<double> vectorSubtract(const std::vector<double>& v1, const std::vector<double>& v2);

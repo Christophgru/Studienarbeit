@@ -12,7 +12,7 @@
 #include "calc.h"
 #include <iostream>
 #include <fstream>
-#define DEBUGLEVEL 0
+#define DEBUGLEVEL 1
 /**
  * @struct Pixel
  * @brief Structure to represent a pixel with RGB values.

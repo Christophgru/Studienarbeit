@@ -34,9 +34,9 @@ def getanchor(val_list,id,param2):
     """
     val=None
     if id==0:
-        val =math.cos(time.time())*param2
+        val =math.cos(time.time()+3)
     if id==1:
-        val =0.5*math.sin(time.time())*param2
+        val =math.sin(time.time())*param2
     if id==2:
         val =math.sin(time.time())*param2
     if id==3:
@@ -60,9 +60,9 @@ def getValues(
     @brief Retrieve and process simulated values from anchor nodes.
     @return A list of dictionaries with processed values or 0 if no change.
     """
-    thetalist=[70,110,80,100]
-    xposlist=[0,3,1,2]
-    assert(len(thetalist)==len(xposlist))
+    thetalist=[90,90]
+    poslist=[[1,0],[3,0]]
+    assert(len(thetalist)==len(poslist))
     numSensors=len(thetalist)
     vallist=[]
     threadlist=[]
@@ -88,7 +88,7 @@ def getValues(
             results[i] = None
             
     for i in range(numSensors):
-        results[i]={"theta":thetalist[i],"val":results[i],"xpos":xposlist[i]}
+        results[i]={"theta":thetalist[i],"val":results[i],"pos":poslist[i]}
     #print(results)
     if changed:
         return results
@@ -101,6 +101,9 @@ def getValues(
 server_running = True
 server_socket = None
 client_sockets = []
+num_pack=0
+
+
 
 def handle_client(client_socket, client_address):
     """
@@ -128,7 +131,10 @@ def send_data_to_all_clients(data):
     @brief Function to send data to all connected clients.
     @param data The data to be sent to all clients.
     """
-    print(f"send data to {len(client_sockets) } clients")
+    global num_pack
+    num_pack=num_pack+1
+    spinner_chars = ['/', '|', '\\', '-']
+    print(f"\rSending data to {len(client_sockets)} clients[{num_pack}]{spinner_chars[num_pack % len(spinner_chars)]}", end='')
     for client_socket in client_sockets:
         try:
             client_socket.sendall(data.encode('utf-8'))

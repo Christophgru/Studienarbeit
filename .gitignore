@@ -12,3 +12,7 @@
 /src/new/__pycache__/
 /src/old/.idea/
 /externals/
+/venv_studienarbeit/
+*.pyc
+__pycache__/
+.vscode/
