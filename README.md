@@ -10,8 +10,11 @@ The source code contains three independent software modules that communicate ove
    `git clone https://github.com/yourusername/yourproject.git`
    `cd yourproject`
 
-2. **Create and Activate the Virtual Environment:**
+2. **Ensure Python 3.12 is Installed:**
+   This project requires Python 3.12. Please ensure it is installed on your machine.
 
+3. **Create and Activate the Virtual Environment:**
+ 
    - On Windows:
    ```sh
      python -m venv venv_Studienarbeit
@@ -23,12 +26,13 @@ The source code contains three independent software modules that communicate ove
      python3 -m venv venv_Studienarbeit
      source venv_Studienarbeit/bin/activate
 
-3. **Install Dependencies:**
+4. **Install Dependencies:**
    `pip install -r requirements.txt`
 
-4. **Start the Project:**
+5. **Start the Project:**
    For Windows machines, use the `startall.bat` script to start and execute the code.
 
+## Components
 ### Data Retrieval
 
 Use Python 3.12 to execute the files `src\DataRetrievalAndUi\mockBluetooth.py` and `src\DataRetrievalAndUi\getAnchorData.py` to retrieve/mock the needed information of the [XPLR-AOA-1 Kit](https://www.u-blox.com/en/product/xplr-aoa-1-kit).
