@@ -1,21 +1,52 @@
-# This is the README for Studienarbeit Bluetoothtracker
+# Studienarbeit Bluetoothtracker
 
-The sourcecoe above contains three independent software modules, that communicate over websockets.
+The source code contains three independent software modules that communicate over WebSockets.
 
 ## HowTo
-To start and execute the code, try the `startall.bat` script for Windows machines. 
-### Dataretrieval
-Use Py 3.12 to execute the files src\DataRetrievalAndUi\mockBluetooth.py and src\DataRetrievalAndUi\getAnchorData.py retrieve/mock the needed information of the XPLR-AOA-1 Kit https://www.u-blox.com/en/product/xplr-aoa-1-kit.
-### Dataoptimisation
-The Files under src\Backend contain the C++ Backend that channels the Data and calculates a Point best fit to all the Sensorangles and their Positions. It can be compiled by CMakeLists.txt.
-C++ Version: CMAKE_CXX_STANDARD 14
-CMake Version: VERSION 3.21
-Make sure to have importet the external NLohammParser into external\JSON that we use for json parsing for automatic and valid JSON-Parsing for the inter process communication.
+
+### Initialize the Project
+
+1. **Clone the Repository:**
+   `git clone https://github.com/yourusername/yourproject.git`
+   `cd yourproject`
+
+2. **Create and Activate the Virtual Environment:**
+
+   - On Windows:
+   ```sh
+     python -m venv venv_Studienarbeit
+     .\venv_Studienarbeit\Scripts\activate
+    ```
+
+   - On macOS and Linux:
+   ```sh
+     python3 -m venv venv_Studienarbeit
+     source venv_Studienarbeit/bin/activate
+
+3. **Install Dependencies:**
+   `pip install -r requirements.txt`
+
+4. **Start the Project:**
+   For Windows machines, use the `startall.bat` script to start and execute the code.
+
+### Data Retrieval
+
+Use Python 3.12 to execute the files `src\DataRetrievalAndUi\mockBluetooth.py` and `src\DataRetrievalAndUi\getAnchorData.py` to retrieve/mock the needed information of the [XPLR-AOA-1 Kit](https://www.u-blox.com/en/product/xplr-aoa-1-kit).
+
+### Data Optimization
+
+The files under `src\Backend` contain the C++ backend that channels the data and calculates a point best fit to all the sensor angles and their positions. It can be compiled using `CMakeLists.txt`.
+
+- **C++ Version:** CMAKE_CXX_STANDARD 14
+- **CMake Version:** VERSION 3.21
+
+Make sure to have imported the external NLohmann JSON parser into `external\JSON` for automatic and valid JSON parsing for inter-process communication.
+
 `git submodule update --init --recursive`
 
 ### Display
-Use Py3.12 for the file src\DataRetrievalAndUi\ui.py to display the calculated Data.
 
+Use Python 3.12 for the file `src\DataRetrievalAndUi\ui.py` to display the calculated data.
 
 ### Authors
 
