@@ -148,7 +148,8 @@ def send_data_to_all_clients(data):
     global num_pack
     num_pack=num_pack+1
     spinner_chars = ['/', '|', '\\', '-']
-    print(f"\rSending data to {len(client_sockets)} clients[{num_pack}]{spinner_chars[num_pack % len(spinner_chars)]}", end='')
+    datastruct=json.loads(data)
+    print(f"\rSending to {len(client_sockets)} clients[{num_pack}]{spinner_chars[num_pack % len(spinner_chars)]} val0:{datastruct[0]["val"]} val1:{datastruct[1]["val"]}", end='')
     for client_socket in client_sockets:
         try:
             client_socket.sendall(data.encode('utf-8'))

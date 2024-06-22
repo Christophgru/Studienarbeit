@@ -45,6 +45,8 @@ def server_thread():
                                 last_msg=msg[last_occurance:]
                             if displaydebuginfo:
                                 print("Received:", last_msg)
+                            print(f"{last_msg}\n", end='')
+    
                             update_display(last_msg)
         except Exception as e:
             print(f"Exception occurred: {e}. Restarting server...")

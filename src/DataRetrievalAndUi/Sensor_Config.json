@@ -1,15 +1,15 @@
 [
     {
         "index": 0,
-        "theta": 70,
-        "pos": [0,0],
+        "theta": 90,
+        "pos": [3,0],
         "id": "6C1DEBA0982F",
         "serial_port": "COM11"
     },
     {
         "index": 1,
-        "theta": 110,
-        "pos": [3,0],
+        "theta": 90,
+        "pos": [0,0],
         "id": "6C1DEBA79E2D",
         "serial_port": "COM12"
     }
