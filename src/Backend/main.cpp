@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
             std::vector<calc::SensorValue> angles = getangles(string);
             if(DEBUGLEVEL) std::cout << std::endl;
             for (calc::SensorValue s : angles) {  
-                if(DEBUGLEVEL) std::cout << "xpos: " << s.pos[0]<<"ypos"<< s.pos[1] << " theta: " << s.theta << " val: " << s.val << "; ";
+                if(DEBUGLEVEL) std::cout << "xpos: " << s.pos[0]<<"ypos: "<< s.pos[1] << " theta: " << s.theta << " val: " << s.val << "; ";
             }
             if(DEBUGLEVEL) std::cout << std::endl;
             lastValue = calc::getPosFromAngles(angles, lastValue);

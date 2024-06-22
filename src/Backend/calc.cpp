@@ -42,11 +42,12 @@ point getPosFromAngles(std::vector<SensorValue> sensorData, point lastPoint) {
     if (std::isnan(lastPoint.gety())) {
         lastPoint.sety(0.0);
     }
-
+    if(DEBUGLEVEL) std::cout<<"before: x: "<<lastPoint.getx()<<" y: "<<lastPoint.gety();
     point p = gradientDescent(lastPoint, lines);
     
+    if(DEBUGLEVEL) std::cout<<"after: x: "<<p.getx()<<" y: "<<p.gety()<<std::endl;
+    
 
-    if(DEBUGLEVEL) std::cout << "calculated pos (" << p.getx() << "|" << p.gety() << ")" << std::endl << std::endl << std::endl;
 
     p.uncertainty=std::vector<double>(p.position.size(),maxUncertainty(p,lines));
     return p;
@@ -59,7 +60,7 @@ point getPosFromAngles(std::vector<SensorValue> sensorData, point lastPoint) {
  * @return highest expected diffrence.
  */
 double maxUncertainty(point p, std::vector<line> lines){
-    if(lines.size()<2)return 0;
+    if(lines.size()<2)return 0.0f;
     std::vector<double> uncertainties;
     for(line l : lines){
         double angle =atan(l.direction[1]/l.direction[0]);
@@ -286,6 +287,8 @@ unsigned char doubleToUnsignedCharInRange(double value) {
  */
 point gradientDescent(point startingPoint, std::vector<line> lines, double gamma, int steps, double delta) {
     if (steps == 0 || std::isnan(startingPoint.getx()) || std::isnan(startingPoint.gety())) {
+        if(std::isnan(startingPoint.getx())){startingPoint.setx(0.0);}
+        if(std::isnan(startingPoint.gety())){startingPoint.sety(0.0);}
         printf("done\n");
         return startingPoint;
     }
@@ -295,6 +298,7 @@ point gradientDescent(point startingPoint, std::vector<line> lines, double gamma
     double incX = deltaDistX / delta;
     double deltaDistY = dist - sqMeanDistance(point({startingPoint.getx(), startingPoint.gety() + delta}), lines);
     double incY = deltaDistY / delta;
+    if(DEBUGLEVEL) std::cout <<"incs: x "<<incX<<" y: "<<incY<<std::endl;
     startingPoint.setx(startingPoint.getx() + gamma * incX);
     startingPoint.sety(startingPoint.gety() + gamma * incY);
     return gradientDescent(startingPoint, lines, gamma, steps - 1);
