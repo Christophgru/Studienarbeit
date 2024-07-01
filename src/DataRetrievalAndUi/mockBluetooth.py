@@ -202,10 +202,14 @@ def main():
     while True:
         try:
             temp = getValues()
-            if temp!=0:
+            start_time = time.time()  # Record the start time
+            if temp != 0:
                 message_final = json.dumps(temp)
-                #print(message_final)
+                # print(message_final)
                 send_data_to_all_clients(message_final)
+            end_time = time.time()  # Record the end time
+            elapsed_time = end_time - start_time  # Calculate the elapsed time
+            print(f"Time taken for this round: {elapsed_time:.4f} seconds")
         except Exception as e:
             print(f"Error in Bluetooth read: {e}")
 

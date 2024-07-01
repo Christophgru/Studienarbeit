@@ -19,6 +19,7 @@
 #include <vector>
 #include "stringparser.h"
 #include "kalman.h"
+#include <chrono>
 
 /**
  * @brief Main function for the application.
@@ -39,6 +40,8 @@ int main(int argc, char** argv) {
     while (true) {
         std::string string = "";
         int red = s.read(&string);
+        auto start = std::chrono::high_resolution_clock::now(); // Record the start time
+
         if (0 < red) {
             std::vector<calc::SensorValue> angles = getangles(string);
             if(DEBUGLEVEL) std::cout << std::endl;
@@ -53,6 +56,10 @@ int main(int argc, char** argv) {
             printf("error");
             break;
         }
+
+        auto end = std::chrono::high_resolution_clock::now(); // Record the end time
+        std::chrono::duration<double> elapsed = end - start;  // Calculate the elapsed time
+        std::cout << "Time taken for this round: " << elapsed.count() << " seconds" << std::endl;
     }
     return 0;
 }

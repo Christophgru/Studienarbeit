@@ -35,9 +35,11 @@ def server_thread():
                     with conn:
                         print('Connected by', addr)
                         while True:
+                            
                             data = conn.recv(1024)
                             if not data:
                                 break
+                            start_time = time.time()  # Record the start time
 
                             msg = data.decode()
                             last_occurance=msg.rfind('{"point":')
@@ -48,6 +50,9 @@ def server_thread():
                             print(f"{last_msg}\n", end='')
     
                             update_display(last_msg)
+                            elapsed=time.time()-start_time
+                            print(f"Time taken for this round: {elapsed:.4f} seconds")
+
         except Exception as e:
             print(f"Exception occurred: {e}. Restarting server...")
 
