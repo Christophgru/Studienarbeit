@@ -9,9 +9,24 @@
  */
 
 #include "kalman.h"
+#include <iostream>
+#include <cmath>
+
+static constexpr size_t DIM_X{2};
+static constexpr size_t DIM_Z{2};
+static kf::KalmanFilter<DIM_X, DIM_Z> kalmanfilter;
+
+kf::Vector<2> convertCartesian2Polar(const kf::Vector<2>& cartesian);
+kf::Matrix<DIM_Z, DIM_Z> calculateJacobianMatrix(const kf::Vector<DIM_X>& vecX);
+Eigen::Vector2f executeCorrectionStep(const calc::point& input);
 
 
-kf::Vector<2> covertCartesian2Polar(const kf::Vector<2> & cartesian)
+
+namespace kf{
+
+
+
+kf::Vector<2> convertCartesian2Polar(const kf::Vector<2>& cartesian)
 {
     const kf::Vector<2> polar{
         std::sqrt(cartesian[0] * cartesian[0] + cartesian[1] * cartesian[1]),
@@ -20,7 +35,7 @@ kf::Vector<2> covertCartesian2Polar(const kf::Vector<2> & cartesian)
     return polar;
 }
 
-kf::Matrix<DIM_Z, DIM_Z> calculateJacobianMatrix(const kf::Vector<DIM_X> & vecX)
+kf::Matrix<DIM_Z, DIM_Z> calculateJacobianMatrix(const kf::Vector<DIM_X>& vecX)
 {
     const kf::float32_t valX2PlusY2{ (vecX[0] * vecX[0]) + (vecX[1] * vecX[1]) };
     const kf::float32_t valSqrtX2PlusY2{ std::sqrt(valX2PlusY2) };
@@ -33,30 +48,46 @@ kf::Matrix<DIM_Z, DIM_Z> calculateJacobianMatrix(const kf::Vector<DIM_X> & vecX)
     return matHj;
 }
 
-void executeCorrectionStep(calc::point input)
+Eigen::Vector2f executeCorrectionStep(const calc::point& input)
 {
-    kalmanfilter.vecX() << 10.0F, 5.0F;;             // Prediction State   
-    kalmanfilter.matP() << 0.3F, 0.0F, 0.0F, 0.3F;   // Kovarianz
+    kalmanfilter.vecX() << 10.0F, 5.0F;             // Prediction State   
+    kalmanfilter.matP() << 0.3F, 0.0F, 0.0F, 0.3F;   // Covariance
 
-    const kf::Vector<2> measPosCart{ input.position };
-    const kf::Vector<DIM_Z> vecZ{ covertCartesian2Polar(measPosCart) };
+    kf::Vector<2> measPosCart;
+    measPosCart << input.position[0], input.position[1];
+    const kf::Vector<DIM_Z> vecZ{ convertCartesian2Polar(measPosCart) };
 
     kf::Matrix<DIM_Z, DIM_Z> matR;
     matR << 0.1F, 0.0F, 0.0F, 0.0008F;
 
-    kf::Matrix<DIM_Z, DIM_X> matHj{ calculateJacobianMatrix(kalmanfilter.vecX()) }; // Jocobi Matrix Hj
+    kf::Matrix<DIM_Z, DIM_X> matHj{ calculateJacobianMatrix(kalmanfilter.vecX()) }; // Jacobian Matrix Hj
 
-    kalmanfilter.correctEkf(covertCartesian2Polar, vecZ, matR, matHj);
+    kalmanfilter.correctEkf(convertCartesian2Polar, vecZ, matR, matHj);
 
     std::cout << "\ncorrected state vector = \n" << kalmanfilter.vecX() << "\n";
     std::cout << "\ncorrected state covariance = \n" << kalmanfilter.matP() << "\n";
 
-    return vecX;
+    Eigen::Vector2f correctedPosition;
+    correctedPosition[0] = kalmanfilter.vecX()[0];
+    correctedPosition[1] = kalmanfilter.vecX()[1];
+
+    return correctedPosition;
 }
 
 
-calc::point kf::filter(calc::point input){
-    
-    calc::point output.position = executeCorrectionStep(input);
-    return output;
-};
+
+calc::point filter(calc::point input)
+{
+    // Ensure input.position is sized correctly
+    if (input.position.size() != 2) {
+        input.position.resize(2);
+    }
+
+    // Execute the correction step and update input.position
+    Eigen::Vector2f correctedPosition = executeCorrectionStep(input);
+    input.position[0] = correctedPosition[0];
+    input.position[1] = correctedPosition[1];
+
+    return input;
+}
+}

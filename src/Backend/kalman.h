@@ -18,6 +18,7 @@
 
 namespace kf
 {
+    calc::point filter(calc::point input);
     template<size_t DIM_X, size_t DIM_Z>
     class KalmanFilter
     {
@@ -38,6 +39,11 @@ namespace kf
 
         Matrix<DIM_X, DIM_X> & matP() { return m_matP; }
         const Matrix<DIM_X, DIM_X> & matP() const { return m_matP; }
+
+
+        //Eigen::Vector2f executeCorrectionStep(const calc::point& input);
+        
+        //calc::point filter(calc::point input);
 
         ///
         /// @brief predict state with a linear process model.
@@ -97,16 +103,11 @@ namespace kf
             m_matP = (matI - matKk * matJcobH) * m_matP;
         }
 
-        calc::point filter(calc::point input);
-
     private:
         Vector<DIM_X> m_vecX{ Vector<DIM_X>::Zero() }; /// @brief estimated state vector
         Matrix<DIM_X, DIM_X> m_matP{ Matrix<DIM_X, DIM_X>::Zero() }; /// @brief state covariance matrix
     };
 }
-
-#endif 
-
 
 
 #endif // STUDIENARBEIT_kalman_H

@@ -34,7 +34,7 @@
 int main(int argc, char** argv) {
     display* d = new display();
     SocketVerwaltung s = SocketVerwaltung();
-    KalmanFilter kalman=KalmanFilter();
+    kf::KalmanFilter <2,2>kalman;
     calc::point lastValue = calc::point({0.0, 0.0});
 
     while (true) {
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
             }
             if(DEBUGLEVEL) std::cout << std::endl;
             lastValue = calc::getPosFromAngles(angles, lastValue);
-            lastValue=kalman.filter(lastValue);
+            lastValue=kf::filter(lastValue);
             d->projectPos(angles, lastValue);
         } else if (red != 0) {
             printf("error");

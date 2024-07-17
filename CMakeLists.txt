@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_subdirectory(external/json)
 
+include_directories(external/eigen)
+
 add_executable(Studienarbeit
         src/Backend/main.cpp
         src/Backend/socket.cpp
