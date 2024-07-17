@@ -1,3 +1,6 @@
 [submodule "external/JSON"]
 	path = external/JSON
 	url = https://github.com/nlohmann/json.git
+[submodule "external/Eigen"]
+	path = external/Eigen
+	url = https://github.com/PX4/eigen.git
