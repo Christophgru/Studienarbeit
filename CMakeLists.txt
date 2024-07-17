@@ -38,7 +38,14 @@ add_executable(Studienarbeit
         #target_link_libraries(Studienarbeit ws2_32)
 
 
-        
+
+
+if(WIN32)
+        # use vcpkg as packages manager in windows platform
+        # environment variable needs to be added for the path to vcpkg installation "VCPKG_ROOT"
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+endif(WIN32)
+     
 
 
         
