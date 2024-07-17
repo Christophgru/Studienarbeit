@@ -50,7 +50,7 @@ kf::Matrix<DIM_Z, DIM_Z> calculateJacobianMatrix(const kf::Vector<DIM_X>& vecX)
 
 Eigen::Vector2f executeCorrectionStep(const calc::point& input)
 {
-    kalmanfilter.vecX() << 10.0F, 5.0F;             // Prediction State   
+    kalmanfilter.vecX() << 0.1F, 0.1F;             // Prediction State   
     kalmanfilter.matP() << 0.3F, 0.0F, 0.0F, 0.3F;   // Covariance
 
     kf::Vector<2> measPosCart;
@@ -58,7 +58,7 @@ Eigen::Vector2f executeCorrectionStep(const calc::point& input)
     const kf::Vector<DIM_Z> vecZ{ convertCartesian2Polar(measPosCart) };
 
     kf::Matrix<DIM_Z, DIM_Z> matR;
-    matR << 0.1F, 0.0F, 0.0F, 0.0008F;
+    matR << 0.1F, 0.0F, 0.0F, 0.1F;
 
     kf::Matrix<DIM_Z, DIM_X> matHj{ calculateJacobianMatrix(kalmanfilter.vecX()) }; // Jacobian Matrix Hj
 

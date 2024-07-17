@@ -4,7 +4,7 @@ project(Studienarbeit)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(external/json)
+add_subdirectory(external/JSON)
 
 include_directories(external/eigen)
 

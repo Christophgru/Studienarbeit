@@ -9,6 +9,7 @@ The source code contains three independent software modules that communicate ove
 1. **Clone the Repository:**
    `git clone https://github.com/yourusername/yourproject.git`
    `cd yourproject`
+   `git submodule update --init --recursive`
 
 2. **Ensure Python 3.12 is Installed:**
    This project requires Python 3.12. Please ensure it is installed on your machine.

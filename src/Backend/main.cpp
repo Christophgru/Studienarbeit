@@ -51,6 +51,7 @@ int main(int argc, char** argv) {
             if(DEBUGLEVEL) std::cout << std::endl;
             lastValue = calc::getPosFromAngles(angles, lastValue);
             lastValue=kf::filter(lastValue);
+            calc::point thisValue=lastValue;
             d->projectPos(angles, lastValue);
         } else if (red != 0) {
             printf("error");
